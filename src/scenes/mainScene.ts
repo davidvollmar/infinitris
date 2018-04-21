@@ -18,7 +18,7 @@ export class MainScene extends Phaser.Scene {
       frameWidth: 512,
       frameHeight: 512,
       startFrame: 0,
-      endFrame: 0,
+      endFrame: 5,
       margin: 0,
       spacing: 0
     };
