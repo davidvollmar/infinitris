@@ -51,9 +51,9 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    for (var i = 0; i < 6; i += 2) {
-      this.add.sprite(i * 256, 780, 'green-block-dark');
-      this.add.sprite((i + 1) * 256, 780, 'green-block-light');
+    for (var i = 0; i < 16; i += 2) {
+      this.add.sprite(i * 52, 780, 'green-block-dark').setScale(.2);
+      this.add.sprite((i + 1) * 52, 780, 'green-block-light').setScale(.2);
     }
   }
 
