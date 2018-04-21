@@ -1,8 +1,10 @@
 import { World } from '../world'
+import { GameObjects } from 'phaser';
 
 export class MainScene extends Phaser.Scene {
   private phaserSprite: Phaser.GameObjects.Sprite;
   private world: World;
+  private man: GameObjects.Sprite;
 
   constructor() {
     super({
@@ -23,22 +25,31 @@ export class MainScene extends Phaser.Scene {
     this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig, null);
   }
 
+
+
   create(): void {
     
     this.world = new World(30, 30);
 
-    var man = this.add.sprite(100,400,'man');
-    var walk = man.anims.create({
-      frames: man.anims.generateFrameNumbers('man', {start: 0, end: 5}),
-      frameRate:6,
-      repeat: -1
-    })
+    this.man = this.add.sprite(100,400,'man');
+    var walk = this.anims.create({
+      key: 'manimation',
+      frames: this.anims.generateFrameNames('man', {start: 0, end: 5}),
+      frameRate: 6,
+      repeat: -1}
+    );
+  
+    this.man.anims.play('manimation')
   }
+
+  
 
   update(time: number, delta: number): void {
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
       console.log("Left Button: " + ptr.position.x + ", " + ptr.position.y);
+      this.man.anims.play('manimation')
+      console.log(this.man.anims.isPlaying)
     }
   }
 }

@@ -104,6 +104,8 @@ declare type AnimationFrameConfig = {
 };
 
 declare type AnimationConfig = {
+
+    key: string;
     /**
      * [description]
      */
