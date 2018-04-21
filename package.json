@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "infinitris",
   "keywords": [
-    "Infinite", "Tetris"
+    "Infinite",
+    "Tetris"
   ],
   "devDependencies": {
     "expose-loader": "0.7.5",
