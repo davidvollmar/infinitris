@@ -63,12 +63,16 @@ export class MainScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
 
-    this.bgtile.tilePositionX += 2;
-    this.cloud.x -= 1;
-    if (this.cloud.x < -100) {
-      this.cloud.x = 800 + Math.random() * 1000;
-      this.cloud.y = 100 + Math.random() * 200;
-    }
+    // this.bgtile.tilePositionX += 2;
+    // this.cloud.x -= 1;
+    // if (this.cloud.x < -100) {
+    //   this.cloud.x = 800 + Math.random() * 1000;
+    //   this.cloud.y = 100 + Math.random() * 200;
+    // }
+
+    let cam = this.cameras.main;
+    cam.setViewport(-this.man.x, cam.y, cam.width, cam.height);
+    this.man.setX(time/50);
 
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
