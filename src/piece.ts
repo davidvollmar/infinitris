@@ -13,13 +13,11 @@ export class Piece {
     private sprites = [];
     private color: string;
 
-    constructor(scene, pieceType: string, color: string, offsetX: integer, offsetY: integer) {
+    constructor(scene, pieceType: string, color: string, offsetX, offsetY: integer) {
         this.scene = scene;
         this.color = color;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-
-        console.log("making a piece of letter: " + pieceType + " and color: " + color);
 
         switch (pieceType) {
             case 'I':
@@ -75,7 +73,6 @@ export class Piece {
     }
 
     initSprite() {
-        console.log("offsets: " + this.offsetX + " " + this.offsetY);
         this.getWorldCoordinates().forEach(element => {
             let sprite = this.scene.add.sprite(element.x, element.y, this.color);
             sprite.setScale(0.25, 0.25);
@@ -97,7 +94,6 @@ export class Piece {
             this.orientation = this.orientations.length - 1;
         }
         this.updateSprite();
-        console.log('left');
     }
 
     rotateright(): void {
@@ -106,24 +102,32 @@ export class Piece {
             this.orientation = 0;
         }
         this.updateSprite();
-        console.log('right');
+    }
+
+    moveRight(): void {
+        this.offsetX++;
+        this.updateSprite();
+    }
+
+    moveLeft(): void {
+        this.offsetX--;
+        this.updateSprite();
     }
 
     drop(): void {
         this.offsetY++;
         this.updateSprite();
-        console.log('down');
     }
 
     drift(speed): void {
         this.offsetX -= speed / this.conversionFactor;
+        this.updateSprite();
     }
 
     getWorldCoordinates(): Array<Coordinate> {
         console.log(this.offset(this.orientations))
         let toCalc = new Array<Coordinate>();
         this.orientations[this.orientation].forEach(element => {
-            console.log("toCalc: x=" + element.x + " y=" + element.y);
             toCalc.push(new Coordinate(element.x, element.y));
         });
         return this.convert(this.offset(toCalc));
@@ -134,7 +138,6 @@ export class Piece {
             return inputCoordinates.map(element => {
                 element.x += this.offsetX;
                 element.y += this.offsetY;
-                console.log("offsetting: x=" + element.x + " y=" + element.y);
                 return new Coordinate(element.x, element.y);
             });
         }
@@ -145,7 +148,6 @@ export class Piece {
             return inputCoordinates.map(element => {
                 element.x *= this.conversionFactor;
                 element.y *= this.conversionFactor;
-                console.log("converting: x=" + element.x + " y=" + element.y);
                 return new Coordinate(element.x, element.y);
             });
         }
