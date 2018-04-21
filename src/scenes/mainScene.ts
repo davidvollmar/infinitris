@@ -8,6 +8,9 @@ export class MainScene extends Phaser.Scene {
   private cloud: GameObjects.Sprite;
   private cloud2: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
+  private piece: GameObjects.Sprite;
+  
+  private x: int = 0;
 
   constructor() {
     super({
@@ -32,6 +35,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
     this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
     this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
+    this.load.image('piece', '../assets/graphics/piece.png');
   }
 
   create(): void {
@@ -59,6 +63,10 @@ export class MainScene extends Phaser.Scene {
 
     let cam = this.cameras.main;
     cam.setViewport(0, 0, 800, 800);
+
+    //now create the hole
+    this.piece = this.add.sprite((600 + Math.random()*400), 200, 'piece');
+    this.piece.setScale(0.25,0.25);
   }
 
   update(time: number, delta: number): void {
