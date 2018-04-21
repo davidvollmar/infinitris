@@ -15,11 +15,3 @@ export class World {
     worldWidth: int;
 
 }
-
-module Tiles {
-    export enum Types {
-        Empty = 0,
-        Tower,
-        Creep
-    };
-}
