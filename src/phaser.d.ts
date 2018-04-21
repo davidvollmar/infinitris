@@ -24650,7 +24650,7 @@ declare namespace Phaser {
              * @param textureXhrSettings Optional texture file specific XHR settings.
              * @param atlasXhrSettings Optional atlas file specific XHR settings.
              */
-            atlas(key: string, textureURL: string, atlasURL: string, textureXhrSettings: XHRSettingsObject, atlasXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            atlas(key: string, textureURL: string, atlasURL: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an Audio file to the current load queue.
@@ -24664,7 +24664,7 @@ declare namespace Phaser {
              * @param config [description]
              * @param xhrSettings [description]
              */
-            audio(key: string, urls: string | string[], config: object, xhrSettings: object): Phaser.Loader.LoaderPlugin;
+            audio(key: string, urls: string | string[], config: object, xhrSettings?: object): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an Audio Sprite file to the current load queue.
@@ -24680,7 +24680,7 @@ declare namespace Phaser {
              * @param audioXhrSettings Optional file specific XHR settings.
              * @param jsonXhrSettings Optional file specific XHR settings.
              */
-            audioSprite(key: string, urls: string | string[], json: object, config: object, audioXhrSettings: XHRSettingsObject, jsonXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            audioSprite(key: string, urls: string | string[], json: object, config: object, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds Binary file to the current load queue.
@@ -24693,7 +24693,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            binary(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            binary(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Bitmap Font file to the current load queue.
@@ -24708,7 +24708,7 @@ declare namespace Phaser {
              * @param textureXhrSettings [description]
              * @param xmlXhrSettings [description]
              */
-            bitmapFont(key: string, textureURL: string, xmlURL: string, textureXhrSettings: XHRSettingsObject, xmlXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            bitmapFont(key: string, textureURL: string, xmlURL: string, textureXhrSettings?: XHRSettingsObject, xmlXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a GLSL file to the current load queue.
@@ -24721,7 +24721,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            glsl(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            glsl(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an HTML file to the current load queue.
@@ -24736,7 +24736,7 @@ declare namespace Phaser {
              * @param height [description]
              * @param xhrSettings [description]
              */
-            html(key: string, url: string, width: number, height: number, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            html(key: string, url: string, width: number, height: number, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an Image file to the current load queue.
@@ -24762,7 +24762,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            json(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            json(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Multi File Texture Atlas to the current load queue.
@@ -24777,7 +24777,7 @@ declare namespace Phaser {
              * @param textureXhrSettings [description]
              * @param atlasXhrSettings [description]
              */
-            multiatlas(key: string, textureURLs: string[], atlasURLs: string[], textureXhrSettings: XHRSettingsObject, atlasXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            multiatlas(key: string, textureURLs: string[], atlasURLs: string[], textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Plugin file to the current load queue.
@@ -24790,7 +24790,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            plugin(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            plugin(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a JavaScript file to the current load queue.
@@ -24803,7 +24803,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            script(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            script(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Sprite Sheet file to the current load queue.
@@ -24817,7 +24817,7 @@ declare namespace Phaser {
              * @param config config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing.
              * @param xhrSettings [description]
              */
-            spritesheet(key: string, url: string, config: object, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            spritesheet(key: string, url: string, config: object, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an SVG file to the current load queue.
@@ -24830,7 +24830,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            svg(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            svg(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Text file to the current load queue.
@@ -24843,7 +24843,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            text(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            text(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Tilemap CSV file to the current load queue.
@@ -24856,7 +24856,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            tilemapCSV(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapCSV(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Tilemap (Tiled JSON Format) file to the current load queue.
@@ -24882,7 +24882,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            tilemapWeltmeister(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapWeltmeister(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Unity Texture Atlas file to the current load queue.
@@ -24897,7 +24897,7 @@ declare namespace Phaser {
              * @param textureXhrSettings Optional texture file specific XHR settings.
              * @param atlasXhrSettings Optional atlas file specific XHR settings.
              */
-            unityAtlas(key: string, textureURL: string, atlasURL: string, textureXhrSettings: XHRSettingsObject, atlasXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            unityAtlas(key: string, textureURL: string, atlasURL: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an XML file to the current load queue.
@@ -24910,7 +24910,7 @@ declare namespace Phaser {
              * @param url [description]
              * @param xhrSettings [description]
              */
-            xml(key: string, url: string, xhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            xml(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * [description]
