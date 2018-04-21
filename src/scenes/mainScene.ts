@@ -22,7 +22,7 @@ export class MainScene extends Phaser.Scene {
       margin: 0,
       spacing: 0
     };
-    this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig, null);
+    this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
   }
 
 
@@ -36,7 +36,8 @@ export class MainScene extends Phaser.Scene {
       key: 'manimation',
       frames: this.anims.generateFrameNames('man', {start: 0, end: 5}),
       frameRate: 6,
-      repeat: -1}
+      repeat: Phaser.FOREVER}
+      
     );
   
     this.man.anims.play('manimation')
