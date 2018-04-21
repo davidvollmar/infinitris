@@ -6,8 +6,8 @@ import { PuzzleScene } from "./scenes/puzzleScene";
 
 // main game configuration
 const config: GameConfig = {
-  width: 800,
-  height: 800,
+  width: 1024,
+  height: 1024,
   type: Phaser.AUTO,
   parent: "game",
   scene: MainScene,

@@ -3,19 +3,28 @@ import { GameObjects } from 'phaser';
 import { PuzzleScene } from './puzzleScene';
 
 export class MainScene extends Phaser.Scene {
+  //graphics
   private phaserSprite: Phaser.GameObjects.Sprite;
   private man: GameObjects.Sprite;
   private cloud: GameObjects.Sprite;
   private cloud2: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
-  private piece: GameObjects.Sprite;
   private background: GameObjects.Sprite;
 
+  //magic numbers
+  private manX = 64;
+
+  //gameplay
+  private movementspeed = 1;
+
+  //input handling  
   private downKey: Phaser.Input.Keyboard.Key;  
   private leftKey: Phaser.Input.Keyboard.Key;  
   private rightKey: Phaser.Input.Keyboard.Key;
-  private movementspeed = 1;
 
+  //things belonging to obstacle:  
+  private piece: GameObjects.Sprite;
+  private validSolutions = [];
 
   constructor() {
     super({
@@ -34,7 +43,7 @@ export class MainScene extends Phaser.Scene {
     };
     this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
 
-    this.load.image('green-block-dark', '../assets/graphics/blocks-dark/block-green.png');
+    this.load.image('floor', '../assets/graphics/Background/floor.png');
 
     this.load.image('background', '../assets/graphics/Background/Background.png');
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
@@ -47,12 +56,11 @@ export class MainScene extends Phaser.Scene {
     
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
-    this.background.setScale(2, 1);
 
     this.cloud = this.add.sprite(100, 100, 'cloud1');
     this.cloud.setScale(0.5, 0.5);
 
-    this.man = this.add.sprite(100, 672, 'man');
+    this.man = this.add.sprite(this.manX, 1024-(4*64)-64, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
       key: 'manimation',
@@ -64,12 +72,12 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    this.bgtile = this.add.tileSprite(0, 736, 6400, 256, 'green-block-dark');
+    this.bgtile = this.add.tileSprite(0, 1024-(4*64), 6400, 1024, 'floor');
     this.bgtile.setOrigin(0, 0);
     this.bgtile.setScale(0.25);
 
     let cam = this.cameras.main;
-    cam.setViewport(0, 0, 800, 800);
+    cam.setViewport(0, 0, 1024, 1024);
 
     //now create the hole
     this.generateObstacle();
@@ -82,23 +90,25 @@ export class MainScene extends Phaser.Scene {
 
   generateObstacle(): void {    
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
-    this.piece = this.add.sprite(512, 256, 'piece'); //512 is random, 256 = 800 - 64 - 8*60
-    this.piece.setScale(0.25,0.25);    
+    this.piece = this.add.sprite(512, 256, 'piece');
+    this.piece.setScale(0.25,0.25);
     this.piece.setOrigin(0,0);//TODO get proper origin for each piece for rotation, or make proper code
+  
+    this.validSolutions = [1,2];
   }
 
   update(time: number, delta: number): void {
 
     this.bgtile.tilePositionX += 2;
     this.cloud.x -= this.movementspeed;
-    if (this.cloud.x < -100) {
-      this.cloud.x = 800 + Math.random() * 1000;
-      this.cloud.y = 100 + Math.random() * 200;
+    if (this.cloud.x < -256) {
+      this.cloud.x = 1024 + Math.random() * 1000;
+      this.cloud.y = 128 + Math.random() * 200;
     }
 
     this.piece.x -= this.movementspeed;
 
-    if(this.piece.x < 0) {//TODO if obstacle solved, generate new else, die
+    if(this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
       this.piece.destroy();
       this.generateObstacle();
     }
@@ -106,7 +116,7 @@ export class MainScene extends Phaser.Scene {
     //handle input
       if(Phaser.Input.Keyboard.JustDown(this.downKey))
       {
-        this.piece.y += 60;//todo it would be nicer to create 'tetris' coordinates
+        this.piece.y += 64;//todo it would be nicer to create 'tetris' coordinates
       }
       if(Phaser.Input.Keyboard.JustDown(this.leftKey))
       {
