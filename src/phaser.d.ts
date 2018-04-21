@@ -24682,7 +24682,7 @@ declare namespace Phaser {
              * @param audioXhrSettings Optional file specific XHR settings.
              * @param jsonXhrSettings Optional file specific XHR settings.
              */
-            audioSprite(key: string, urls: string | string[], json: object, config: object, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            audioSprite(key: string, urls: string | string[], json: object, config: object, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds Binary file to the current load queue.

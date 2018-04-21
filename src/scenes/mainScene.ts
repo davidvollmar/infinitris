@@ -6,8 +6,6 @@ export class MainScene extends Phaser.Scene {
   private world: World;
   private man: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
-  
-  private x: int = 0;
 
   constructor() {
     super({
@@ -16,7 +14,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    var spritesheetconfig = {
+    let spritesheetconfig = {
       frameWidth: 512,
       frameHeight: 512,
       startFrame: 0,
@@ -35,35 +33,32 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-    this.world = new World(30, 30);
-
-    this.add.image(400,400,'background');
-
-    this.man = this.add.sprite(100,672,'man');
+    this.man = this.add.sprite(100, 672, 'man');
     this.man.setScale(0.25, 0.25);
-    var walk = this.anims.create({
+    let walk = this.anims.create({
       key: 'manimation',
-      frames: this.anims.generateFrameNames('man', {start: 0, end: 5}),
+      frames: this.anims.generateFrameNames('man', { start: 0, end: 5 }),
       frameRate: 6,
-      repeat: Phaser.FOREVER}
+      repeat: Phaser.FOREVER
+    }
     );
 
     this.man.anims.play('manimation')
 
-    this.bgtile = this.add.tileSprite(0,736, 3200, 256, 'green-block-dark');
+    this.bgtile = this.add.tileSprite(0, 736, 3200, 256, 'green-block-dark');
     this.bgtile.setOrigin(0, 0);
     this.bgtile.setScale(0.25);
 
     let cam = this.cameras.main;
     cam.setViewport(0, 0, 800, 800);
-    cam.centerToBounds;
   }
 
   update(time: number, delta: number): void {
-    
+
     this.bgtile.tilePositionX += 2;
-    
+
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
       console.log("Left Button: " + ptr.position.x + ", " + ptr.position.y);
