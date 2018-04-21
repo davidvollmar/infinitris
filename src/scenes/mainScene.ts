@@ -1,6 +1,7 @@
 import { World } from '../world'
 import { GameObjects } from 'phaser';
 import { PuzzleScene } from './puzzleScene';
+import { Piece } from '../piece';
 
 export class MainScene extends Phaser.Scene {
   //graphics
