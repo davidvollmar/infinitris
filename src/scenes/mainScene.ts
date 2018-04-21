@@ -10,6 +10,7 @@ export class MainScene extends Phaser.Scene {
   private cloud2: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
   private background: GameObjects.Sprite;
+  private graphics: GameObjects.Graphics;
 
   //magic numbers
   private manX = 64;
@@ -18,13 +19,18 @@ export class MainScene extends Phaser.Scene {
   private movementspeed = 1;
 
   //input handling  
-  private downKey: Phaser.Input.Keyboard.Key;  
-  private leftKey: Phaser.Input.Keyboard.Key;  
+  private downKey: Phaser.Input.Keyboard.Key;
+  private leftKey: Phaser.Input.Keyboard.Key;
   private rightKey: Phaser.Input.Keyboard.Key;
 
   //things belonging to obstacle:  
   private piece: GameObjects.Sprite;
   private validSolutions = [];
+
+  //tetris
+  private tetrisWidth = 8;
+  private field: Array<number> = new Array(this.tetrisWidth * 8)
+  private tetrisOffset = 600;
 
   constructor() {
     super({
@@ -53,14 +59,14 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-    
+
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
 
     this.cloud = this.add.sprite(100, 100, 'cloud1');
     this.cloud.setScale(0.5, 0.5);
 
-    this.man = this.add.sprite(this.manX, 1024-(4*64)-64, 'man');
+    this.man = this.add.sprite(this.manX, 1024 - (4 * 64) - 64, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
       key: 'manimation',
@@ -72,7 +78,7 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    this.bgtile = this.add.tileSprite(0, 1024-(4*64), 6400, 1024, 'floor');
+    this.bgtile = this.add.tileSprite(0, 1024 - (4 * 64), 6400, 1024, 'floor');
     this.bgtile.setOrigin(0, 0);
     this.bgtile.setScale(0.25);
 
@@ -86,19 +92,24 @@ export class MainScene extends Phaser.Scene {
     this.downKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
+    this.graphics = this.add.graphics();
+    //typescript has no fill() number[] ?!
+    for (var i = 0; i < this.field.length; i++) {
+      this.field[i] = 0;
+    }
   }
 
-  generateObstacle(): void {    
+  generateObstacle(): void {
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
     this.piece = this.add.sprite(512, 256, 'piece');
-    this.piece.setScale(0.25,0.25);
-    this.piece.setOrigin(0,0);//TODO get proper origin for each piece for rotation, or make proper code
-  
-    this.validSolutions = [1,2];
+    this.piece.setScale(0.25, 0.25);
+    this.piece.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
+
+    this.validSolutions = [1, 2];
   }
 
   update(time: number, delta: number): void {
-
     this.bgtile.tilePositionX += 2;
     this.cloud.x -= this.movementspeed;
     if (this.cloud.x < -256) {
@@ -108,25 +119,38 @@ export class MainScene extends Phaser.Scene {
 
     this.piece.x -= this.movementspeed;
 
-    if(this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
+    if (this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
       this.piece.destroy();
       this.generateObstacle();
     }
 
     //handle input
-      if(Phaser.Input.Keyboard.JustDown(this.downKey))
-      {
-        this.piece.y += 64;//todo it would be nicer to create 'tetris' coordinates
-      }
-      if(Phaser.Input.Keyboard.JustDown(this.leftKey))
-      {
-        this.piece.rotation -= Math.PI/2;
-      }
-      if(Phaser.Input.Keyboard.JustDown(this.rightKey))
-      {
-        this.piece.rotation += Math.PI/2;
-      }
+    let keyboard = Phaser.Input.Keyboard;
+    if (keyboard.JustDown(this.downKey)) {
+      this.piece.y += 64;//todo it would be nicer to create 'tetris' coordinates
+    }
+    if (keyboard.JustDown(this.leftKey)) {
+      this.piece.rotation -= Math.PI / 2;
+    }
+    if (keyboard.JustDown(this.rightKey)) {
+      this.piece.rotation += Math.PI / 2;
+    }
+
+    this.renderTetris()
   }
 
-  
+  renderTetris() {
+    let blockSize = 56;
+    this.tetrisOffset -= this.movementspeed;
+    let offset = [ this.tetrisOffset, 400];
+
+    this.graphics.clear();
+    this.field.map(
+      (value, index) => {
+        let pos = [index % this.tetrisWidth, Math.floor(index / this.tetrisWidth)];
+        let xy = [offset[0] + (pos[0] * blockSize), offset[1] + (pos[1] * blockSize)];
+        this.graphics.strokeRect(xy[0], xy[1], blockSize, blockSize)
+      }
+    );
+  }
 }
