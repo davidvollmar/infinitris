@@ -5,6 +5,8 @@ export class MainScene extends Phaser.Scene {
   private phaserSprite: Phaser.GameObjects.Sprite;
   private world: World;
   private man: GameObjects.Sprite;
+  private cloud: GameObjects.Sprite;
+  private cloud2: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
 
   constructor() {
@@ -29,13 +31,17 @@ export class MainScene extends Phaser.Scene {
     this.load.image('background', '../assets/graphics/Background/Background.png');
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
     this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
-    this.load.image('cloud1', '../assets/graphics/Background/Cloud2.png');
+    this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
   }
 
   create(): void {
     this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-    this.man = this.add.sprite(100, 672, 'man');
+    this.cloud = this.add.sprite(100, 100, 'cloud1');
+    this.cloud.setScale(0.5, 0.5);
+
+
+    this.man = this.add.sprite(100,672,'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
       key: 'manimation',
@@ -58,6 +64,10 @@ export class MainScene extends Phaser.Scene {
   update(time: number, delta: number): void {
 
     this.bgtile.tilePositionX += 2;
+    this.cloud.x -= 1;
+    if(this.cloud.x < -100) {
+      this.cloud.x = 800 + Math.random()*1000;
+    }     
 
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
