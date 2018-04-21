@@ -22,7 +22,12 @@ export class MainScene extends Phaser.Scene {
       margin: 0,
       spacing: 0
     };
-    this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
+    this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig, null);
+
+    this.load.image('background', '../assets/graphics/Background/Background.png');
+    this.load.image('sun', '../assets/graphics/Background/Sun.png');
+    this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
+    this.load.image('cloud1', '../assets/graphics/Background/Cloud2.png');
   }
 
 
@@ -31,16 +36,19 @@ export class MainScene extends Phaser.Scene {
     
     this.world = new World(30, 30);
 
-    this.man = this.add.sprite(100,400,'man');
+    this.add.image(400,400,'background');
+
+    this.man = this.add.sprite(100,700,'man');
+    this.man.setScale(0.2, 0.2);
     var walk = this.anims.create({
       key: 'manimation',
       frames: this.anims.generateFrameNames('man', {start: 0, end: 5}),
       frameRate: 6,
       repeat: Phaser.FOREVER}
-      
     );
   
     this.man.anims.play('manimation')
+
   }
 
   
