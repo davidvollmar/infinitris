@@ -8,6 +8,7 @@ export class MainScene extends Phaser.Scene {
   private man: GameObjects.Sprite;
   private cloud: GameObjects.Sprite;
   private cloud2: GameObjects.Sprite;
+  private tree: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
   private background: GameObjects.Sprite;
   private graphics: GameObjects.Graphics;
@@ -55,6 +56,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
     this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
     this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
+    this.load.image('tree', '../assets/graphics/Background/tree.png');
     this.load.image('piece', '../assets/graphics/piece.png');
   }
 
@@ -63,10 +65,13 @@ export class MainScene extends Phaser.Scene {
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
 
-    this.cloud = this.add.sprite(100, 100, 'cloud1');
+    this.cloud = this.add.sprite(128, 100, 'cloud1');
     this.cloud.setScale(0.5, 0.5);
 
-    this.man = this.add.sprite(this.manX, 1024 - (4 * 64) - 64, 'man');
+    this.tree = this.add.sprite(768, 1024-(4*64)-128, 'tree');
+    this.tree.setScale(0.5);
+
+    this.man = this.add.sprite(this.manX, 1024-(4*64)-64, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
       key: 'manimation',
@@ -78,7 +83,7 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    this.bgtile = this.add.tileSprite(0, 1024 - (4 * 64), 6400, 1024, 'floor');
+    this.bgtile = this.add.tileSprite(0, 1024-(4*64), 4096, 1024, 'floor');
     this.bgtile.setOrigin(0, 0);
     this.bgtile.setScale(0.25);
 
@@ -111,11 +116,19 @@ export class MainScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     this.bgtile.tilePositionX += 2;
+
     this.cloud.x -= this.movementspeed;
     if (this.cloud.x < -256) {
-      this.cloud.x = 1024 + Math.random() * 1000;
-      this.cloud.y = 128 + Math.random() * 200;
+      this.cloud.x = 1024 + Math.random() * 1024;
+      this.cloud.y = 128 + Math.random() * 256;
     }
+
+    this.tree.x -= this.movementspeed;
+    if (this.tree.x < -256) {
+      this.tree.x = 1024 + Math.random() * 1024;
+      this.tree.y = 1024 - (4 * 64) - 128;
+    }
+
 
     this.piece.x -= this.movementspeed;
 
@@ -142,7 +155,7 @@ export class MainScene extends Phaser.Scene {
   renderTetris() {
     let blockSize = 56;
     this.tetrisOffset -= this.movementspeed;
-    let offset = [ this.tetrisOffset, 400];
+    let offset = [this.tetrisOffset, 400];
 
     this.graphics.clear();
     this.field.map(
