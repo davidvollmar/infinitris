@@ -1,5 +1,6 @@
 import { World } from '../world'
 import { GameObjects } from 'phaser';
+import { PuzzleScene } from './puzzleScene';
 
 export class MainScene extends Phaser.Scene {
   private phaserSprite: Phaser.GameObjects.Sprite;
@@ -44,7 +45,6 @@ export class MainScene extends Phaser.Scene {
     this.cloud = this.add.sprite(100, 100, 'cloud1');
     this.cloud.setScale(0.5, 0.5);
 
-
     this.man = this.add.sprite(100, 672, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
@@ -67,6 +67,7 @@ export class MainScene extends Phaser.Scene {
     //now create the hole
     this.piece = this.add.sprite((600 + Math.random()*400), 200, 'piece');
     this.piece.setScale(0.25,0.25);
+
   }
 
   update(time: number, delta: number): void {
@@ -81,6 +82,10 @@ export class MainScene extends Phaser.Scene {
     let cam = this.cameras.main;
     cam.setViewport(-this.man.x, cam.y, cam.width, cam.height);
     this.man.setX(time/50);
+
+    if(this.man.x > 100) {
+      this.scene.start('PuzzleScene');
+    }
 
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
