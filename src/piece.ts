@@ -11,17 +11,62 @@ export class Piece {
 
     private scene;
     private sprites = [];
+    private color: string;
 
-    constructor(scene, pieceType: string, offsetX: integer, offsetY: integer) {
+    constructor(scene, pieceType: string, color: string, offsetX: integer, offsetY: integer) {
         this.scene = scene;
+        this.color = color;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+
+        console.log("making a piece of letter: " + pieceType + " and color: " + color);
 
         switch (pieceType) {
             case 'I':
                 this.orientations = [
                     [new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
                     [new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2), new Coordinate(1, 3)]
+                ];
+                break;
+            case 'L':
+                this.orientations = [
+                    [new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
+                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, 1)],
+                    [new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(2, -1)]
+                ];
+                break;
+            case 'L2':
+                this.orientations = [
+                    [new Coordinate(3, 0), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
+                    [new Coordinate(1, -1), new Coordinate(2, 1), new Coordinate(1, 0), new Coordinate(1, 1)],
+                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0), new Coordinate(1, 1)],
+                    [new Coordinate(1, -1), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(2, -1)]
+                ];
+                break;
+            case 'S':
+                this.orientations = [
+                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1), new Coordinate(1, 1)],
+                    [new Coordinate(2, 2), new Coordinate(2, 1), new Coordinate(1, 0), new Coordinate(1, 1)]
+                ];
+                break;
+            case 'Z':
+                this.orientations = [
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(2, 1)],
+                    [new Coordinate(1, 2), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(1, 1)]
+                ];
+                break;
+            case 'O':
+                this.orientations = [
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, 1)]
+                ];
+                break;
+            case 'M':
+                this.orientations = [
+                    [new Coordinate(2, 0), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
+                    [new Coordinate(1, -1), new Coordinate(2, 0), new Coordinate(1, 0), new Coordinate(1, 1)],
+                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0), new Coordinate(2, 1)],
+                    [new Coordinate(1, 0), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(2, -1)]
                 ];
                 break;
         }
@@ -32,7 +77,7 @@ export class Piece {
     initSprite() {
         console.log("offsets: " + this.offsetX + " " + this.offsetY);
         this.getWorldCoordinates().forEach(element => {
-            let sprite = this.scene.add.sprite(element.x, element.y, 'block');
+            let sprite = this.scene.add.sprite(element.x, element.y, this.color);
             sprite.setScale(0.25, 0.25);
             sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
             this.sprites.push(sprite);

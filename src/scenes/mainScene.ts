@@ -60,7 +60,9 @@ export class MainScene extends Phaser.Scene {
     this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
     this.load.image('tree', '../assets/graphics/Background/tree.png');
     // this.load.image('piece', '../assets/graphics/piece.png');
-    this.load.image('block', '../assets/graphics/blocks-light/block-red.png');
+    this.load.image('block-red', '../assets/graphics/blocks-light/block-red.png');
+    this.load.image('block-green', '../assets/graphics/blocks-light/block-green.png');
+    this.load.image('block-blue', '../assets/graphics/blocks-light/block-blue.png');
   }
 
   create(): void {
@@ -110,9 +112,19 @@ export class MainScene extends Phaser.Scene {
 
   generateObstacle(): void {
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
-    this.piece = new Piece(this, 'I', 8, 4);
+    this.piece = new Piece(this, this.pickLetter(), this.pickColor(), 8, 4);
     
     this.validSolutions = [1, 2];
+  }
+
+  pickColor():string {    
+    let colors = ['block-red','block-blue','block-green'];
+    return(colors[Math.floor(Math.random()*colors.length)]);
+  }
+
+  pickLetter():string {
+    let letters = ['I', 'L', 'L2', 'S', 'Z', 'O', 'M'];
+    return(letters[Math.floor(Math.random()*letters.length)]);
   }
 
   update(time: number, delta: number): void {
