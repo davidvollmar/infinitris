@@ -11,27 +11,28 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image("logo", "../assets/fff.png");
+    //this.load.image("logo", "../assets/fff.png");
+    var spritesheetconfig = {
+      frameWidth: 512,
+      frameHeight: 512,
+      startFrame: 0,
+      endFrame: 0,
+      margin: 0,
+      spacing: 0
+    };
+    this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig, null);
   }
 
   create(): void {
-    // this.phaserSprite = this.add.sprite(400, 300, "logo");
+    
     this.world = new World(30, 30);
 
-    //this.add.image(0, 0, 'logo');
-
-    this.world.map.map(
-      (value, index, array) => {
-        let pos = [index % this.world.worldWidth, Math.floor(index / this.world.worldWidth)];
-        // console.log("pos = (" + pos[0] + ", " + pos[1] + ")");
-
-        let xy = [10 + pos[0] * 20, 10 + pos[1] * 20];
-        let sprite = this.add.sprite(xy[0], xy[1], 'logo');
-
-        // console.log(sprite.x);
-        // console.log(sprite.y);
-      }
-    );
+    var man = this.add.sprite(100,400,'man');
+    var walk = man.anims.create({
+      frames: man.anims.generateFrameNumbers('man', {start: 0, end: 5}),
+      frameRate:6,
+      repeat: -1
+    })
   }
 
   update(time: number, delta: number): void {
