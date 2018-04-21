@@ -47,7 +47,7 @@ export class Piece {
 
     getWorldCoordinates(): Array<Coordinate> {
         console.log(this.offset(this.orientations))
-        return this.convert(this.offset(this.orientations));
+        return this.convert(this.offset(this.orientations[this.orientation]));
     }
 
     offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {

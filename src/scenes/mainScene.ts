@@ -60,7 +60,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
     this.load.image('tree', '../assets/graphics/Background/tree.png');
     // this.load.image('piece', '../assets/graphics/piece.png');
-    this.load.image('block', '../assets/graphics/sprites/blocks-light/block-red.png');
+    this.load.image('block', '../assets/graphics/blocks-light/block-red.png');
   }
 
   create(): void {
@@ -113,10 +113,10 @@ export class MainScene extends Phaser.Scene {
     this.piece = new Piece('I', 8, 4);
     this.piece.getWorldCoordinates().forEach(element => {
       this.pieceSprite = this.add.sprite(element.x, element.y, 'block');      
+      this.pieceSprite.setScale(0.25, 0.25);
+      this.pieceSprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
     });
-    this.pieceSprite.setScale(0.25, 0.25);
-    this.pieceSprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
-
+    
     this.validSolutions = [1, 2];
   }
 
