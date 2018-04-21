@@ -110,12 +110,7 @@ export class MainScene extends Phaser.Scene {
 
   generateObstacle(): void {
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
-    this.piece = new Piece('I', 8, 4);
-    this.piece.getWorldCoordinates().forEach(element => {
-      this.pieceSprite = this.add.sprite(element.x, element.y, 'block');      
-      this.pieceSprite.setScale(0.25, 0.25);
-      this.pieceSprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
-    });
+    this.piece = new Piece(this, 'I', 8, 4);
     
     this.validSolutions = [1, 2];
   }
@@ -136,7 +131,7 @@ export class MainScene extends Phaser.Scene {
     }
 
 
-    this.piece.drift(this.movementspeed);
+    //this.piece.drift(this.movementspeed);
 
     // if (this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
     //   this.piece.destroy();

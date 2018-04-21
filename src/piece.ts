@@ -9,7 +9,11 @@ export class Piece {
 
     private conversionFactor = 64;
 
-    constructor(pieceType: string, offsetX: integer, offsetY: integer) {
+    private scene;
+    private sprites = [];
+
+    constructor(scene, pieceType: string, offsetX: integer, offsetY: integer) {
+        this.scene = scene;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
 
@@ -21,6 +25,25 @@ export class Piece {
                 ];
                 break;
         }
+
+        this.initSprite();
+    }
+
+    initSprite() {
+        console.log("offsets: " + this.offsetX + " " + this.offsetY);
+        this.getWorldCoordinates().forEach(element => {
+            let sprite = this.scene.add.sprite(element.x, element.y, 'block');
+            sprite.setScale(0.25, 0.25);
+            sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
+            this.sprites.push(sprite);
+        });
+    }
+
+    updateSprite() {
+        this.sprites.forEach(element => {
+            element.destroy();
+        });
+        this.initSprite();
     }
 
     rotateleft(): void {
@@ -28,17 +51,23 @@ export class Piece {
         if (this.orientation < 0) {
             this.orientation = this.orientations.length - 1;
         }
+        this.updateSprite();
+        console.log('left');
     }
 
     rotateright(): void {
-        this.orientation--;
-        if (this.orientation < 0) {
-            this.orientation = this.orientations.length - 1;
+        this.orientation++;
+        if (this.orientation > this.orientations.length - 1) {
+            this.orientation = 0;
         }
+        this.updateSprite();
+        console.log('right');
     }
 
     drop(): void {
         this.offsetY++;
+        this.updateSprite();
+        console.log('down');
     }
 
     drift(speed): void {
@@ -47,7 +76,12 @@ export class Piece {
 
     getWorldCoordinates(): Array<Coordinate> {
         console.log(this.offset(this.orientations))
-        return this.convert(this.offset(this.orientations[this.orientation]));
+        let toCalc = new Array<Coordinate>();
+        this.orientations[this.orientation].forEach(element => {
+            console.log("toCalc: x=" + element.x + " y=" + element.y);
+            toCalc.push(new Coordinate(element.x, element.y));
+        });
+        return this.convert(this.offset(toCalc));
     }
 
     offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
@@ -55,7 +89,8 @@ export class Piece {
             return inputCoordinates.map(element => {
                 element.x += this.offsetX;
                 element.y += this.offsetY;
-                return new Coordinate(element.x, element.y)
+                console.log("offsetting: x=" + element.x + " y=" + element.y);
+                return new Coordinate(element.x, element.y);
             });
         }
     }
@@ -65,10 +100,13 @@ export class Piece {
             return inputCoordinates.map(element => {
                 element.x *= this.conversionFactor;
                 element.y *= this.conversionFactor;
-                return new Coordinate(element.x, element.y)
+                console.log("converting: x=" + element.x + " y=" + element.y);
+                return new Coordinate(element.x, element.y);
             });
         }
     }
+
+
 }
 
 class Coordinate {
