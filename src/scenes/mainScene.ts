@@ -70,7 +70,7 @@ export class MainScene extends Phaser.Scene {
     this.bgtile.tilePositionX += 2;
     this.cloud.x -= 1;
     if(this.cloud.x < -100) {
-      this.cloud.x = 800 + Math.random()*800;
+      this.cloud.x = 800 + Math.random()*1000;
     }     
 
     let ptr = this.input.mouse.manager.activePointer;
