@@ -10,7 +10,7 @@ const config: GameConfig = {
   height: 800,
   type: Phaser.AUTO,
   parent: "game",
-  scene: [MainScene, PuzzleScene],
+  scene: MainScene,
   input: {
     mouse: true
   },

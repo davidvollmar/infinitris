@@ -4,14 +4,18 @@ import { PuzzleScene } from './puzzleScene';
 
 export class MainScene extends Phaser.Scene {
   private phaserSprite: Phaser.GameObjects.Sprite;
-  private world: World;
   private man: GameObjects.Sprite;
   private cloud: GameObjects.Sprite;
   private cloud2: GameObjects.Sprite;
   private bgtile: GameObjects.TileSprite;
   private piece: GameObjects.Sprite;
-  
-  private x: int = 0;
+  private background: GameObjects.Sprite;
+
+  private downKey: Phaser.Input.Keyboard.Key;  
+  private leftKey: Phaser.Input.Keyboard.Key;  
+  private rightKey: Phaser.Input.Keyboard.Key;
+  private movementspeed = 1;
+
 
   constructor() {
     super({
@@ -40,7 +44,10 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    
+    this.background = this.add.sprite(0, 0, 'background');
+    this.background.setOrigin(0, 0);
+    this.background.setScale(2, 1);
 
     this.cloud = this.add.sprite(100, 100, 'cloud1');
     this.cloud.setScale(0.5, 0.5);
@@ -57,7 +64,7 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    this.bgtile = this.add.tileSprite(0, 736, 3200, 256, 'green-block-dark');
+    this.bgtile = this.add.tileSprite(0, 736, 6400, 256, 'green-block-dark');
     this.bgtile.setOrigin(0, 0);
     this.bgtile.setScale(0.25);
 
@@ -65,33 +72,51 @@ export class MainScene extends Phaser.Scene {
     cam.setViewport(0, 0, 800, 800);
 
     //now create the hole
-    this.piece = this.add.sprite((600 + Math.random()*400), 200, 'piece');
-    this.piece.setScale(0.25,0.25);
+    this.generateObstacle();
 
+    //define keyboard input
+    this.downKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+  }
+
+  generateObstacle(): void {    
+    //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
+    this.piece = this.add.sprite(512, 256, 'piece'); //512 is random, 256 = 800 - 64 - 8*60
+    this.piece.setScale(0.25,0.25);    
+    this.piece.setOrigin(0,0);//TODO get proper origin for each piece for rotation, or make proper code
   }
 
   update(time: number, delta: number): void {
 
-    // this.bgtile.tilePositionX += 2;
-    // this.cloud.x -= 1;
-    // if (this.cloud.x < -100) {
-    //   this.cloud.x = 800 + Math.random() * 1000;
-    //   this.cloud.y = 100 + Math.random() * 200;
-    // }
-
-    let cam = this.cameras.main;
-    cam.setViewport(-this.man.x, cam.y, cam.width, cam.height);
-    this.man.setX(time/50);
-
-    if(this.man.x > 100) {
-      this.scene.start('PuzzleScene');
+    this.bgtile.tilePositionX += 2;
+    this.cloud.x -= this.movementspeed;
+    if (this.cloud.x < -100) {
+      this.cloud.x = 800 + Math.random() * 1000;
+      this.cloud.y = 100 + Math.random() * 200;
     }
 
-    let ptr = this.input.mouse.manager.activePointer;
-    if (ptr.isDown) {
-      console.log("Left Button: " + ptr.position.x + ", " + ptr.position.y);
+    this.piece.x -= this.movementspeed;
 
+    if(this.piece.x < 0) {//TODO if obstacle solved, generate new else, die
+      this.piece.destroy();
+      this.generateObstacle();
     }
 
+    //handle input
+      if(Phaser.Input.Keyboard.JustDown(this.downKey))
+      {
+        this.piece.y += 60;//todo it would be nicer to create 'tetris' coordinates
+      }
+      if(Phaser.Input.Keyboard.JustDown(this.leftKey))
+      {
+        this.piece.rotation -= Math.PI/2;
+      }
+      if(Phaser.Input.Keyboard.JustDown(this.rightKey))
+      {
+        this.piece.rotation += Math.PI/2;
+      }
   }
+
+  
 }
