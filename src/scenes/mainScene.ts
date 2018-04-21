@@ -41,7 +41,7 @@ export class MainScene extends Phaser.Scene {
     this.cloud.setScale(0.5, 0.5);
 
 
-    this.man = this.add.sprite(100,672,'man');
+    this.man = this.add.sprite(100, 672, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
       key: 'manimation',
@@ -65,9 +65,10 @@ export class MainScene extends Phaser.Scene {
 
     this.bgtile.tilePositionX += 2;
     this.cloud.x -= 1;
-    if(this.cloud.x < -100) {
-      this.cloud.x = 800 + Math.random()*1000;
-    }     
+    if (this.cloud.x < -100) {
+      this.cloud.x = 800 + Math.random() * 1000;
+      this.cloud.y = 100 + Math.random() * 200;
+    }
 
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
