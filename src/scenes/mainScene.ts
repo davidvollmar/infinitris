@@ -5,7 +5,8 @@ export class MainScene extends Phaser.Scene {
   private phaserSprite: Phaser.GameObjects.Sprite;
   private world: World;
   private man: GameObjects.Sprite;
-
+  private bgtile: GameObjects.TileSprite;
+  
   private x: int = 0;
 
   constructor() {
@@ -26,7 +27,6 @@ export class MainScene extends Phaser.Scene {
     this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
 
     this.load.image('green-block-dark', '../assets/graphics/blocks-dark/block-green.png');
-    this.load.image('green-block-light', '../assets/graphics/blocks-light/block-green.png');
 
     this.load.image('background', '../assets/graphics/Background/Background.png');
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
@@ -40,8 +40,8 @@ export class MainScene extends Phaser.Scene {
 
     this.add.image(400,400,'background');
 
-    this.man = this.add.sprite(100,700,'man');
-    this.man.setScale(0.2, 0.2);
+    this.man = this.add.sprite(100,672,'man');
+    this.man.setScale(0.25, 0.25);
     var walk = this.anims.create({
       key: 'manimation',
       frames: this.anims.generateFrameNames('man', {start: 0, end: 5}),
@@ -51,17 +51,24 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    for (var i = 0; i < 6; i += 2) {
-      this.add.sprite(i * 256, 780, 'green-block-dark');
-      this.add.sprite((i + 1) * 256, 780, 'green-block-light');
-    }
+    this.bgtile = this.add.tileSprite(0,736, 3200, 256, 'green-block-dark');
+    this.bgtile.setOrigin(0, 0);
+    this.bgtile.setScale(0.25);
+
+    let cam = this.cameras.main;
+    cam.setViewport(0, 0, 800, 800);
+    cam.centerToBounds;
   }
 
   update(time: number, delta: number): void {
+    
+    this.bgtile.tilePositionX += 2;
+    
     let ptr = this.input.mouse.manager.activePointer;
     if (ptr.isDown) {
       console.log("Left Button: " + ptr.position.x + ", " + ptr.position.y);
 
     }
+
   }
 }
