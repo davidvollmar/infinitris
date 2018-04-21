@@ -26,7 +26,8 @@ export class MainScene extends Phaser.Scene {
   private rightKey: Phaser.Input.Keyboard.Key;
 
   //things belonging to obstacle:  
-  private piece: GameObjects.Sprite;
+  private piece: Piece;
+  private pieceSprite: GameObjects.Sprite;
   private validSolutions = [];
 
   //tetris
@@ -58,7 +59,8 @@ export class MainScene extends Phaser.Scene {
     this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
     this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
     this.load.image('tree', '../assets/graphics/Background/tree.png');
-    this.load.image('piece', '../assets/graphics/piece.png');
+    // this.load.image('piece', '../assets/graphics/piece.png');
+    this.load.image('block', '../assets/graphics/sprites/blocks-light/block-red.png');
   }
 
   create(): void {
@@ -108,9 +110,12 @@ export class MainScene extends Phaser.Scene {
 
   generateObstacle(): void {
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
-    this.piece = this.add.sprite(512, 256, 'piece');
-    this.piece.setScale(0.25, 0.25);
-    this.piece.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
+    this.piece = new Piece('I', 8, 4);
+    this.piece.getWorldCoordinates().forEach(element => {
+      this.pieceSprite = this.add.sprite(element.x, element.y, 'block');      
+    });
+    this.pieceSprite.setScale(0.25, 0.25);
+    this.pieceSprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
 
     this.validSolutions = [1, 2];
   }
@@ -131,23 +136,23 @@ export class MainScene extends Phaser.Scene {
     }
 
 
-    this.piece.x -= this.movementspeed;
+    this.piece.drift(this.movementspeed);
 
-    if (this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
-      this.piece.destroy();
-      this.generateObstacle();
-    }
+    // if (this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
+    //   this.piece.destroy();
+    //   this.generateObstacle();
+    // }
 
     //handle input
     let keyboard = Phaser.Input.Keyboard;
     if (keyboard.JustDown(this.downKey)) {
-      this.piece.y += 64;//todo it would be nicer to create 'tetris' coordinates
+      this.piece.drop();
     }
     if (keyboard.JustDown(this.leftKey)) {
-      this.piece.rotation -= Math.PI / 2;
+      this.piece.rotateleft();
     }
     if (keyboard.JustDown(this.rightKey)) {
-      this.piece.rotation += Math.PI / 2;
+      this.piece.rotateright();
     }
 
     this.renderTetris()
