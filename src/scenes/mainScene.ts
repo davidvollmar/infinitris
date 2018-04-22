@@ -34,8 +34,8 @@ export class MainScene extends Phaser.Scene {
   private validSolutions: number[] = [];
 
   //tetris floors
+  private floors: Array<Floor> | null = null;
   private currentFloor: Floor | null = null;
-  private nextFloor: Floor | null = null;
 
   constructor() {
     super({
@@ -116,8 +116,10 @@ export class MainScene extends Phaser.Scene {
     this.man.anims.play('manimation')
 
     //floor
-    this.currentFloor = this.generateFloor();
-    //this.nextFloor = this.generateFloor();
+    this.currentFloor = this.generateFloor(0);
+    this.floors = new Array<Floor>();
+    this.floors.push(this.currentFloor);
+    this.floors.push(this.generateFloor(1));
 
     //camera
     let cam = this.cameras.main;
@@ -136,8 +138,8 @@ export class MainScene extends Phaser.Scene {
     this.piece = this.currentFloor.getSelectedPiece();
   }
 
-  generateFloor(): Floor {    
-    return new Floor(this, 16, 4, 0);
+  generateFloor(offset: number): Floor {    
+    return new Floor(this, 16, 4, 0, offset);
   }
 
   generateObstacle(): void {
@@ -178,7 +180,19 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
-    this.currentFloor!.drift(this.movementspeed);
+    //this.currentFloor!.drift(this.movementspeed);
+    this.floors!.forEach(floor => {
+      floor.drift(this.movementspeed);
+    });
+
+    if(this.currentFloor!.getBottomRight() < 0) {
+      //now, the floor is gone, so we can remove it 
+      //and set current to the next in the queue 
+      //and generate a new next floor
+      this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
+      this.currentFloor = this.floors![0];
+      this.floors!.push(this.generateFloor(1));
+    }
     let piece = this.piece!;
 
     //piece.drift(this.movementspeed);    

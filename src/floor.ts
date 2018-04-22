@@ -19,7 +19,9 @@ export class Floor {
 
     private selectedPiece: Piece;
 
-    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number) {
+    private bottomRight: number;
+
+    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, offset: number) {
         this.scene = scene;
         this.width = width;
         this.height = height;
@@ -53,6 +55,9 @@ export class Floor {
         lastPiece.moveUp()        
 
         this.selectedPiece = lastPiece;
+        
+        //bottom right
+        this.bottomRight = 1024+(1024*offset);
     }
 
     getSelectedPiece() {
@@ -178,6 +183,11 @@ export class Floor {
     }
 
     drift(movementSpeed: number) {
+        this.bottomRight -= movementSpeed;
         this.buildingFloor.forEach(p => p.drift(movementSpeed))
+    }
+
+    getBottomRight() {
+        return this.bottomRight;
     }
 }
