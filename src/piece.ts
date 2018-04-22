@@ -77,7 +77,7 @@ export class Piece {
         }
     }
 
-    takeOutOfPuzzle(): void {
+    moveOutOfPuzzle(): void {
         for(var i = 0; i<Math.floor(Math.random()*4); i++) {
             this.rotateleft();
         }

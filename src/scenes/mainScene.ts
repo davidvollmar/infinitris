@@ -14,6 +14,7 @@ export class MainScene extends Phaser.Scene {
   private background: GameObjects.Sprite | null = null;
   // private graphics: GameObjects.Graphics;
   private instructionText: GameObjects.Text | null = null;
+  private additionalText: GameObjects.Text | null = null;
 
   //magic numbers
   private manX = 64;
@@ -23,10 +24,12 @@ export class MainScene extends Phaser.Scene {
 
   //input handling  
   private downKey: Phaser.Input.Keyboard.Key | null = null;
+  private upKey: Phaser.Input.Keyboard.Key | null = null;
   private leftKey: Phaser.Input.Keyboard.Key | null = null;
   private rightKey: Phaser.Input.Keyboard.Key | null = null;
   private zKey: Phaser.Input.Keyboard.Key | null = null;
   private xKey: Phaser.Input.Keyboard.Key | null = null;
+  private spaceKey: Phaser.Input.Keyboard.Key | null = null;
 
   //things belonging to obstacle:  
   private piece: Piece | null = null;
@@ -104,8 +107,10 @@ export class MainScene extends Phaser.Scene {
     this.tree2 = this.add.sprite(768, 1024-(4*64)-128, 'tree2');
     this.tree2.setScale(0.5);
 
-    this.instructionText = this.add.text(512, 128, "Z/X to rotate\nArrows to move blocks\n\nFix the road before you fall!");
+    this.instructionText = this.add.text(512, 128, "Z/X to rotate blocks\nArrows to move blocks\n\nFix the road before you fall!");
     this.instructionText.setScale(2);
+    this.additionalText = this.add.text(2048+512,128, "Space to select other block");
+    this.additionalText.setScale(2);
 
     //player animation
     this.man = this.add.sprite(this.manX, 1024-(4*64)-64, 'man');
@@ -121,30 +126,33 @@ export class MainScene extends Phaser.Scene {
     this.man.anims.play('manimation')
 
     //floor
-    this.currentFloor = this.generateFloor(0);
+    this.currentFloor = this.generateFloor(1,0);
     this.floors = new Array<Floor>();
     this.floors.push(this.currentFloor);
-    this.floors.push(this.generateFloor(1));
+    this.floors.push(this.generateFloor(1,1));
 
     //camera
     let cam = this.cameras.main;
     cam.setViewport(0, 0, 1024, 1024);
 
     //now create the hole
-    this.generateObstacle();
+    //this.generateObstacle();
 
     //define keyboard input
     this.downKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.piece = this.currentFloor.getSelectedPiece();
   }
 
-  generateFloor(offset: number): Floor {    
-    return new Floor(this, 16, 4, 0, offset);
+  generateFloor(nrOfMissingPieces: number, offset: number): Floor {    
+    console.log("generate floor with " + nrOfMissingPieces + " missing pieces");
+    return new Floor(this, 16, 4, nrOfMissingPieces, offset);
   }
 
   generateObstacle(): void {
@@ -181,7 +189,13 @@ export class MainScene extends Phaser.Scene {
     if(this.instructionText) {
       this.instructionText.x--;
       if(this.instructionText.x < -1024) {
-        this.instructionText.destroy;
+        this.instructionText.destroy();
+      }
+    }
+    if(this.additionalText) {
+      this.additionalText.x--;
+      if(this.additionalText.x < -1024) {
+        this.additionalText.destroy();
       }
     }
 
@@ -198,7 +212,7 @@ export class MainScene extends Phaser.Scene {
       this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
       this.currentFloor = this.floors![0];
       this.piece = this.currentFloor.getSelectedPiece();
-      this.floors!.push(this.generateFloor(1));
+      this.floors!.push(this.generateFloor(2,1));
     }
     let piece = this.piece!;
 
@@ -210,21 +224,30 @@ export class MainScene extends Phaser.Scene {
     // }
 
     //handle input
-    let keyboard = Phaser.Input.Keyboard;
-    if (keyboard.JustDown(this.downKey!)) {
-      piece.drop();
-    }
-    if (keyboard.JustDown(this.zKey!)) {
-      piece.rotateleft();
-    }
-    if (keyboard.JustDown(this.xKey!)) {
-      piece.rotateright();
-    }
-    if (keyboard.JustDown(this.leftKey!)) {
-      piece.moveLeft();
-    }
-    if (keyboard.JustDown(this.rightKey!)) {
-      piece.moveRight();
-    }   
+    if(piece != null) {
+      let keyboard = Phaser.Input.Keyboard;
+      if (keyboard.JustDown(this.downKey!)) {
+        piece.drop();
+      }
+      if (keyboard.JustDown(this.upKey!)) {
+        piece.moveUp();
+      }
+      if (keyboard.JustDown(this.zKey!)) {
+        piece.rotateleft();
+      }
+      if (keyboard.JustDown(this.xKey!)) {
+        piece.rotateright();
+      }
+      if (keyboard.JustDown(this.leftKey!)) {
+        piece.moveLeft();
+      }
+      if (keyboard.JustDown(this.rightKey!)) {
+        piece.moveRight();
+      }   
+      if (keyboard.JustDown(this.spaceKey!)) {
+        this.currentFloor!.selectNextPiece();
+        this.piece = this.currentFloor!.getSelectedPiece();
+      } 
+   }  
   }
 }

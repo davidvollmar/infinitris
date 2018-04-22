@@ -11,6 +11,7 @@ export class Floor {
     private missingPieces: integer;
 
     private floor = Array<Piece>();
+    private floatingPieces = Array<Piece>();
 
     private buildingFloor: Array<Piece>;
 
@@ -18,6 +19,7 @@ export class Floor {
     private maxPieces: number;
 
     private selectedPiece: Piece;
+    private selectedPieceIndex: integer;
 
     private bottomRight: integer;
     private offset: integer;
@@ -50,16 +52,30 @@ export class Floor {
 
         // console.log("floor+ " + this.floor);
         // console.log("buildingfloor+ ", this.buildingFloor);
-        let puzzlePiece = this.buildingFloor[this.selectPuzzlePiece(this.buildingFloor)];
-        // console.log(lastPiece)
+        this.floatingPieces = [];
 
-        puzzlePiece.takeOutOfPuzzle();
+        for(var i = 0; i<missingPieces; i++) {
+            let pindex = this.selectPuzzlePiece(this.buildingFloor);
+            let p = this.buildingFloor[pindex];
+            this.floatingPieces.push(p);
+            this.buildingFloor.splice(pindex,1);
+            p.moveOutOfPuzzle()            
+        }
 
-        this.selectedPiece = puzzlePiece;
+        this.selectedPieceIndex = 0;
+        this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
     }
 
-    getSelectedPiece() {
+    getSelectedPiece():Piece {
         return this.selectedPiece;
+    }
+
+    selectNextPiece():void {
+        this.selectedPieceIndex++;
+        if(this.selectedPieceIndex>=this.floatingPieces.length) {
+            this.selectedPieceIndex = 0;
+        }
+        this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
     }
 
     // private debug = 0;
@@ -181,7 +197,8 @@ export class Floor {
 
     drift(movementSpeed: number) {
         this.bottomRight -= movementSpeed;
-        this.buildingFloor.forEach(p => p.drift(movementSpeed))
+        this.buildingFloor.forEach(p => p.drift(movementSpeed));
+        this.floatingPieces.forEach(p => p.drift(movementSpeed));
     }
 
     getBottomRight() {
@@ -190,6 +207,9 @@ export class Floor {
 
     destroy() {       
         this.buildingFloor.forEach(p => {
+            p.destroy();
+        });
+        this.floatingPieces.forEach(p => {
             p.destroy();
         });
     }
