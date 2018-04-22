@@ -178,9 +178,10 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
+    this.currentFloor!.drift(this.movementspeed);
     let piece = this.piece!;
 
-    piece.drift(this.movementspeed);
+    piece.drift(this.movementspeed);    
 
     // if (this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
     //   this.piece.destroy();

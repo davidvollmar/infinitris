@@ -176,4 +176,8 @@ export class Floor {
         // console.log("checking done: " + buildingFloor.length + " max: " + this.maxPieces);
         return buildingFloor.length == this.maxPieces;
     }
+
+    drift(movementSpeed: number) {
+        this.buildingFloor.forEach(p => p.drift(movementSpeed))
+    }
 }
