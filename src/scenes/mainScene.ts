@@ -9,7 +9,8 @@ export class MainScene extends Phaser.Scene {
   private cloud: GameObjects.Sprite;
   private cloud2: GameObjects.Sprite;
   private tree: GameObjects.Sprite;
-  // private bgtile: GameObjects.TileSprite;
+  private tree2: GameObjects.Sprite;
+  
   private background: GameObjects.Sprite;
   private graphics: GameObjects.Graphics;
   private instructionText: GameObjects.Text;
@@ -57,9 +58,10 @@ export class MainScene extends Phaser.Scene {
 
     this.load.image('background', '../assets/graphics/Background/Background.png');
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
-    this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
-    this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
-    this.load.image('tree', '../assets/graphics/Background/tree.png');
+    this.load.image('cloud-small', '../assets/graphics/Background/Cloud-small.png');
+    this.load.image('cloud-big', '../assets/graphics/Background/Cloud-big.png');
+    this.load.image('tree', '../assets/graphics/Background/tree.png');    
+    this.load.image('tree2', '../assets/graphics/Background/tree2.png');
 
     this.load.image('block-red', '../assets/graphics/blocks-light/block-red.png');
     this.load.image('block-green', '../assets/graphics/blocks-light/block-green.png');
@@ -72,11 +74,17 @@ export class MainScene extends Phaser.Scene {
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
 
-    this.cloud = this.add.sprite(128, 100, 'cloud1');
+    this.cloud = this.add.sprite(128, 128, 'cloud-small');
     this.cloud.setScale(0.5, 0.5);
+
+    this.cloud2 = this.add.sprite(512, 256, 'cloud-big');
+    this.cloud2.setScale(0.5, 0.5);
 
     this.tree = this.add.sprite(768, 1024-(4*64)-128, 'tree');
     this.tree.setScale(0.5);
+
+    this.tree2 = this.add.sprite(768, 1024-(4*64)-128, 'tree2');
+    this.tree2.setScale(0.5);
 
     this.instructionText = this.add.text(512, 128, "Z/X to rotate\nArrows to move blocks\n\nFix the road before you fall!");
     this.instructionText.setScale(2);
@@ -131,7 +139,19 @@ export class MainScene extends Phaser.Scene {
       this.cloud.y = 128 + Math.random() * 256;
     }
 
+    this.cloud2.x -= this.movementspeed * 2;
+    if (this.cloud2.x < -256) {
+      this.cloud2.x = 1024 + Math.random() * 1024;
+      this.cloud2.y = 128 + Math.random() * 256;
+    }
+
     this.tree.x -= this.movementspeed;
+    if (this.tree.x < -256) {
+      this.tree.x = 1024 + Math.random() * 1024;
+      this.tree.y = 1024 - (4 * 64) - 128;
+    }
+
+    this.tree2.x -= this.movementspeed;
     if (this.tree.x < -256) {
       this.tree.x = 1024 + Math.random() * 1024;
       this.tree.y = 1024 - (4 * 64) - 128;
