@@ -1,8 +1,11 @@
 import { Piece } from './piece';
 import { Coordinate } from './coordinate';
+import { GameObjects } from 'phaser';
 
 export class Floor {
     private scene;
+    private magicGlobalOffsetY = 12;
+
     private width: integer;
     private height: integer;
     private missingPieces: integer;
@@ -52,7 +55,8 @@ export class Floor {
             // if(this.debug > 10) { let p:Piece = null; p.getLetter();}//crash
             
             // console.log("next empty position: " + nextPosition.toString());
-            let letters = Piece.getAllLetters(); //TODO randomize the order??
+            let letters = Piece.getAllLetters(); 
+            Phaser.Utils.Array.Shuffle(letters);//randomizing s.t. we get other solution than just I-piece everwhere
             for(var l = 0; l<letters.length; l++) {
                 let letter = letters[l];
                 for (var i = 0; i<Piece.getNumberOfOrientations(letter); i++) {
@@ -89,14 +93,14 @@ export class Floor {
         //     console.log("piece on coordinate: " + element.toString());            
         // });
 
-        let toReturn: Coordinate = new Coordinate(0, 11);//y (0-15) but floor is at (11-15)  
+        let toReturn: Coordinate = new Coordinate(0, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
 
         if (filledCoordinates.length > 0) {
             let filled: boolean = false;
             let done: boolean = false;
             for (var x = 0; x < this.width && !done; x++) {
                 // console.log("trying x: " + x);
-                for (var y = 11; y < this.height + 11 && !done; y++) {//y (0-15) but floor is at (11-15)                
+                for (var y = this.magicGlobalOffsetY; y < this.height + this.magicGlobalOffsetY && !done; y++) {//y (0-15) but floor is at (11-15)                
                     // console.log("trying y: " + y);
                     filled = false;
                     for (var i = 0; i < filledCoordinates.length && !filled; i++) {
