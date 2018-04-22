@@ -29,57 +29,7 @@ export class Piece {
         this.offsetY = offsetY;
         this.draw = draw;
 
-        switch (pieceType) {
-            case 'I':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, 3)],
-                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)],
-                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)]
-                ];
-                break;
-            case 'L':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(1, 2)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, -1)]
-                ];
-                break;
-            case 'J':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(-1, 2)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1), new Coordinate(0, 2)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, 1)]
-                ];
-                break;
-            case 'S':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, -1), new Coordinate(2, -1)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(1, 2)]
-                ];
-                break;
-            case 'Z':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(2, 1)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, -1)]
-                ];
-                break;
-            case 'O':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, 1)]
-                ];
-                break;
-            case 'T':
-                this.orientations = [
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, 1)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, -1), new Coordinate(1, 1)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, -1)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(0, 2)]
-                ];
-                break;
-        }
+        this.orientations = Piece.getOrientations(pieceType);
 
         if (orientation != null) {
             this.orientation = orientation;
@@ -99,22 +49,6 @@ export class Piece {
 
     public static pickLetter(): string {
         return (Piece.letters[Math.floor(Math.random() * Piece.letters.length)]);
-    }
-
-    public static pickLetterExcept(excepted: Array<string>): string {
-        let lettersToChooseFrom = Piece.letters;
-        lettersToChooseFrom.filter(function (x) {
-            return excepted.indexOf(x) < 0
-        });
-        return lettersToChooseFrom[Math.floor(Math.random() * lettersToChooseFrom.length)];;
-    }
-
-    getNextOrientation(): integer {
-        let toReturn = this.orientation + 1;
-        if (toReturn >= this.orientations.length) {
-            toReturn = 0
-        }
-        return toReturn;
     }
 
     setOrientation(o: integer) {
@@ -203,6 +137,14 @@ export class Piece {
         return this.offset(toCalc);
     }
 
+    static getAllLetters() {
+        return this.letters;
+    }
+
+    static getNumberOfOrientations(letter: string) {
+        return this.getOrientations(letter).length;
+    }
+
     getLetter(): string {
         return this.pieceType;
     }
@@ -218,6 +160,7 @@ export class Piece {
     getOffsetY() {
         return this.offsetY;
     }
+
 
     offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
         if (inputCoordinates) {
@@ -260,6 +203,62 @@ export class Piece {
 
     toString(): string {
         return "letter: " + this.pieceType + " color: " + this.color + " orientation: " + this.orientation + " offsetX: " + this.offsetX + " offsetY: " + this.offsetY;
+    }
+
+    static getOrientations(pieceType): Array<Coordinate> {
+        let orientations;
+        switch (pieceType) {
+            case 'I':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, 3)],
+                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)],
+                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)]
+                ];
+                break;
+            case 'L':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, -1)]
+                ];
+                break;
+            case 'J':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(-1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1), new Coordinate(0, 2)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, 1)]
+                ];
+                break;
+            case 'S':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, -1), new Coordinate(2, -1)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(1, 2)]
+                ];
+                break;
+            case 'Z':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(2, 1)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, -1)]
+                ];
+                break;
+            case 'O':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, 1)]
+                ];
+                break;
+            case 'T':
+                orientations = [
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, -1), new Coordinate(1, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, -1)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(0, 2)]
+                ];
+                break;
+        }
+        return orientations
     }
 
 }
