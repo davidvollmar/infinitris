@@ -67,9 +67,22 @@ export class MainScene extends Phaser.Scene {
     this.load.image('block-green', '../assets/graphics/blocks-light/block-green.png');
     this.load.image('block-blue', '../assets/graphics/blocks-light/block-blue.png');    
     this.load.image('block-yellow', '../assets/graphics/blocks-light/block-yellow.png');
+    
+    //deuntje 
+    //CC-Stealing_Orchestra_-_05_-_Tetris_Beware_Boy_Videogames_Are_Evil
+    //by-nc-nd/3.0/
+    let audioconfig = {
+      loop: true,
+    };
+    this.load.audio('theme', 'assets/audio/theme.mp3', audioconfig);
   }
 
   create(): void {
+    //start music
+    var music = this.sound.add('theme');
+    music.loop = true;
+    music.play();
+
     //initial graphics
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
