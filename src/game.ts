@@ -2,6 +2,7 @@
 
 import "phaser";
 import { MainScene } from "./scenes/mainScene";
+import { MenuScene } from "./scenes/menuScene";
 
 // main game configuration
 const config: GameConfig = {
@@ -9,7 +10,7 @@ const config: GameConfig = {
   height: 1024,
   type: Phaser.AUTO,
   parent: "game",
-  scene: MainScene,
+  scene: [MenuScene, MainScene],
   input: {
     mouse: true
   },
