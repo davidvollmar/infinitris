@@ -1,4 +1,3 @@
-import { World } from '../world'
 import { GameObjects } from 'phaser';
 import { Piece } from '../piece';
 import { Floor } from '../floor';
@@ -69,7 +68,6 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-
     //initial graphics
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
