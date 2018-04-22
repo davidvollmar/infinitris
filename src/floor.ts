@@ -50,19 +50,19 @@ export class Floor {
 
         // console.log("floor+ " + this.floor);
         // console.log("buildingfloor+ ", this.buildingFloor);
-        let lastPiece = this.buildingFloor[this.buildingFloor.length - 1]
+        let puzzlePiece = this.buildingFloor[this.selectPuzzlePiece(this.buildingFloor)];
         // console.log(lastPiece)
 
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
+        puzzlePiece.moveUp()
 
-        this.selectedPiece = lastPiece;
+        this.selectedPiece = puzzlePiece;
     }
 
     getSelectedPiece() {
@@ -193,5 +193,26 @@ export class Floor {
 
     getBottomRight() {
         return this.bottomRight;
+    }
+
+    selectPuzzlePiece(buildingFloor: Array<Piece>): integer {
+        //idea: pick 'toprightmost' piece
+        //so, select the piece that fills the topright coordinate in the box
+        let topRightMost:Coordinate = new Coordinate(-1, this.height+this.magicGlobalOffsetY+1);
+        //initial implementation, just pick the last one that was put in place
+        let toReturn:integer = buildingFloor.length - 1;
+
+        for(var i = 0; i < buildingFloor.length; i++) {
+            let p:Piece = buildingFloor[i];
+            p.getTetrisCoordinates().forEach(c => {
+                if(c.y <= topRightMost.y && c.x >= topRightMost.x) {
+                    topRightMost = new Coordinate(c.x, c.y);
+                    toReturn = i;
+                }
+            });
+        }
+
+        //initial implementation, just pick the last one that was put in place
+        return toReturn;
     }
 }
