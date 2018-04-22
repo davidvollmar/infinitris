@@ -10,7 +10,7 @@ export class MainScene extends Phaser.Scene {
   private cloud2: GameObjects.Sprite | null = null;
   private tree: GameObjects.Sprite | null = null;
   private tree2: GameObjects.Sprite | null = null;
-  
+
   private background: GameObjects.Sprite | null = null;
   // private graphics: GameObjects.Graphics;
   private instructionText: GameObjects.Text | null = null;
@@ -63,19 +63,19 @@ export class MainScene extends Phaser.Scene {
     this.load.image('sun', '../assets/graphics/Background/Sun.png');
     this.load.image('cloud-small', '../assets/graphics/Background/Cloud-small.png');
     this.load.image('cloud-big', '../assets/graphics/Background/Cloud-big.png');
-    this.load.image('tree', '../assets/graphics/Background/tree.png');    
+    this.load.image('tree', '../assets/graphics/Background/tree.png');
     this.load.image('tree2', '../assets/graphics/Background/tree2.png');
 
     this.load.image('light-red', '../assets/graphics/blocks-light/block-red.png');
     this.load.image('light-green', '../assets/graphics/blocks-light/block-green.png');
-    this.load.image('light-blue', '../assets/graphics/blocks-light/block-blue.png');    
+    this.load.image('light-blue', '../assets/graphics/blocks-light/block-blue.png');
     this.load.image('light-yellow', '../assets/graphics/blocks-light/block-yellow.png');
 
     this.load.image('dark-red', '../assets/graphics/blocks-dark/block-red.png');
     this.load.image('dark-green', '../assets/graphics/blocks-dark/block-green.png');
-    this.load.image('dark-blue', '../assets/graphics/blocks-dark/block-blue.png');    
+    this.load.image('dark-blue', '../assets/graphics/blocks-dark/block-blue.png');
     this.load.image('dark-yellow', '../assets/graphics/blocks-dark/block-yellow.png');
-    
+
     //deuntje 
     //CC-Stealing_Orchestra_-_05_-_Tetris_Beware_Boy_Videogames_Are_Evil
     //by-nc-nd/3.0/
@@ -101,19 +101,19 @@ export class MainScene extends Phaser.Scene {
     this.cloud2 = this.add.sprite(512, 256, 'cloud-big');
     this.cloud2.setScale(0.5, 0.5);
 
-    this.tree = this.add.sprite(768, 1024-(4*64)-128, 'tree');
+    this.tree = this.add.sprite(768, 1024 - (4 * 64) - 128, 'tree');
     this.tree.setScale(0.5);
 
-    this.tree2 = this.add.sprite(768, 1024-(4*64)-128, 'tree2');
+    this.tree2 = this.add.sprite(768, 1024 - (4 * 64) - 128, 'tree2');
     this.tree2.setScale(0.5);
 
     this.instructionText = this.add.text(512, 128, "Z/X to rotate blocks\nArrows to move blocks\n\nFix the road before you fall!");
     this.instructionText.setScale(2);
-    this.additionalText = this.add.text(2048+512,128, "Space to select other block");
+    this.additionalText = this.add.text(2048 + 512, 128, "Space to select other block");
     this.additionalText.setScale(2);
 
     //player animation
-    this.man = this.add.sprite(this.manX, 1024-(4*64)-64, 'man');
+    this.man = this.add.sprite(this.manX, 1024 - (4 * 64) - 64, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
       key: 'manimation',
@@ -126,10 +126,10 @@ export class MainScene extends Phaser.Scene {
     this.man.anims.play('manimation')
 
     //floor
-    this.currentFloor = this.generateFloor(1,0);
+    this.currentFloor = this.generateFloor(1, 0);
     this.floors = new Array<Floor>();
     this.floors.push(this.currentFloor);
-    this.floors.push(this.generateFloor(1,1));
+    this.floors.push(this.generateFloor(1, 1));
 
     //camera
     let cam = this.cameras.main;
@@ -150,7 +150,7 @@ export class MainScene extends Phaser.Scene {
     this.piece = this.currentFloor.getSelectedPiece();
   }
 
-  generateFloor(nrOfMissingPieces: number, offset: number): Floor {    
+  generateFloor(nrOfMissingPieces: number, offset: number): Floor {
     console.log("generate floor with " + nrOfMissingPieces + " missing pieces");
     return new Floor(this, 16, 4, nrOfMissingPieces, offset);
   }
@@ -158,7 +158,7 @@ export class MainScene extends Phaser.Scene {
   generateObstacle(): void {
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
     this.piece = new Piece(this, Piece.pickLetter(), Piece.pickColor(), 8, 4, false);
-    
+
     this.validSolutions = [1, 2];
   }
 
@@ -186,15 +186,15 @@ export class MainScene extends Phaser.Scene {
       this.tree2!.y = 1024 - (4 * 64) - 128;
     }
 
-    if(this.instructionText) {
+    if (this.instructionText) {
       this.instructionText.x--;
-      if(this.instructionText.x < -1024) {
+      if (this.instructionText.x < -1024) {
         this.instructionText.destroy();
       }
     }
-    if(this.additionalText) {
+    if (this.additionalText) {
       this.additionalText.x--;
-      if(this.additionalText.x < -1024) {
+      if (this.additionalText.x < -1024) {
         this.additionalText.destroy();
       }
     }
@@ -212,7 +212,7 @@ export class MainScene extends Phaser.Scene {
       }
     });
 
-    if(this.currentFloor!.getBottomRight() < 0) {
+    if (this.currentFloor!.getBottomRight() < 0) {
       //now, the floor is gone, so we can remove it 
       //and set current to the next in the queue 
       //and generate a new next floor
@@ -220,7 +220,7 @@ export class MainScene extends Phaser.Scene {
       this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
       this.currentFloor = this.floors![0];
       this.piece = this.currentFloor.getSelectedPiece();
-      this.floors!.push(this.generateFloor(2,1));
+      this.floors!.push(this.generateFloor(2, 1));
     }
     let piece = this.piece!;
 
@@ -232,10 +232,15 @@ export class MainScene extends Phaser.Scene {
     // }
 
     //handle input
-    if(piece != null) {
+    if (piece != null) {
       let keyboard = Phaser.Input.Keyboard;
       if (keyboard.JustDown(this.downKey!)) {
         piece.drop();
+        if(this.currentFloor!.fitsInOpenSpace(piece)){
+          this.nextPiece();
+          this.currentFloor!.removeFromOpenSpace(piece);
+          return;
+        }        
       }
       if (keyboard.JustDown(this.upKey!)) {
         piece.moveUp();
@@ -251,11 +256,15 @@ export class MainScene extends Phaser.Scene {
       }
       if (keyboard.JustDown(this.rightKey!)) {
         piece.moveRight();
-      }   
+      }
       if (keyboard.JustDown(this.spaceKey!)) {
-        this.currentFloor!.selectNextPiece();
-        this.piece = this.currentFloor!.getSelectedPiece();
-      } 
-   }  
+        this.nextPiece();
+      }
+    }
+  }
+
+  nextPiece(): void {
+    this.currentFloor!.selectNextPiece();
+    this.piece = this.currentFloor!.getSelectedPiece();
   }
 }
