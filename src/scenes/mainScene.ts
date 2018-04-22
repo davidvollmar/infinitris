@@ -202,6 +202,14 @@ export class MainScene extends Phaser.Scene {
     //this.currentFloor!.drift(this.movementspeed);
     this.floors!.forEach(floor => {
       floor.drift(this.movementspeed);
+      //idea, here we should be able to find the current 'tetriscoordinate' under the player
+      //then, we can check in the floor if this was a 'opened' space and if it is now filled
+      //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
+      //what the tetriscoordinate is right under the player
+      //and hence, if he trips
+      if(floor.currentCellEmpty(128)) {
+          console.log("Die!");
+      }
     });
 
     if(this.currentFloor!.getBottomRight() < 0) {

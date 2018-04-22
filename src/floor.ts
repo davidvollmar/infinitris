@@ -25,6 +25,11 @@ export class Floor {
     private offset: integer;
     private xOffset: integer; //this is the x-offset in tetris coordinates
 
+    //idea: keep track of the 'opened' coordinates when taking out pieces
+    //compare those to the coordinates filled by pieces
+    //if not all opened coordinates are filled, the puzzle is not solved and the player trips
+    private openedCoordinates: Array<Coordinate>;
+
     constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, offset: integer) {
         this.scene = scene;
         this.width = width;
@@ -43,7 +48,7 @@ export class Floor {
 
         //fill up the floor
         this.solve();
-        console.log("solved");
+        // console.log("solved");
         //now buildingFloor can become floor.
         this.buildingFloor.forEach(element => {
             // console.log("enabling draw for: " + element.toString());
@@ -53,14 +58,18 @@ export class Floor {
         // console.log("floor+ " + this.floor);
         // console.log("buildingfloor+ ", this.buildingFloor);
         this.floatingPieces = [];
+        this.openedCoordinates = [];
 
         for(var i = 0; i<missingPieces; i++) {
             let pindex = this.selectPuzzlePiece(this.buildingFloor);
             let p = this.buildingFloor[pindex];
+            this.openedCoordinates = this.openedCoordinates.concat(p.getTetrisCoordinates());
             this.floatingPieces.push(p);
             this.buildingFloor.splice(pindex,1);
             p.moveOutOfPuzzle()            
         }
+
+        this.openedCoordinates.forEach(oc => console.log("opened coordinate: " + oc.toString()));
 
         this.selectedPieceIndex = 0;
         this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
@@ -203,6 +212,22 @@ export class Floor {
 
     getBottomRight() {
         return this.bottomRight;
+    }
+
+    currentCellEmpty(magicScreenX:number):boolean {
+    
+        let toCheck:Coordinate = new Coordinate(16 - Math.floor((this.bottomRight - magicScreenX)/64), 12);
+
+        //console.log("current cell x: " + (16 - Math.floor((this.bottomRight - magicScreenX)/64)));
+
+        this.openedCoordinates.forEach(o => {
+            if(Coordinate.overlaps(toCheck, o)) {
+                //was empty //TODO check if now filled
+                return true;
+            }
+        })
+        
+        return false;
     }
 
     destroy() {       
