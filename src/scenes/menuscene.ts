@@ -1,5 +1,5 @@
 export class MenuScene extends Phaser.Scene {
-    
+
     constructor() {
         super({
             key: "MenuScene"
@@ -10,13 +10,12 @@ export class MenuScene extends Phaser.Scene {
 
     }
 
-    create ()
-    {
-        this.input.once('pointerdown', function () {
+    create() {
+        this.input.once('pointerdown', function (a: MenuScene) {
 
             console.log('From SceneA to SceneB');
 
-            this.scene.start('MainScene');
+            a.scene.start('MainScene');
 
         }, this);
     }
