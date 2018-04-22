@@ -3,7 +3,7 @@ import { Coordinate } from './coordinate';
 import { GameObjects } from 'phaser';
 
 export class Floor {
-    private scene;
+    private scene: Phaser.Scene;
     private magicGlobalOffsetY = 12;
 
     private width: integer;
@@ -12,13 +12,12 @@ export class Floor {
 
     private floor = Array<Piece>();
 
-    private buildingFloor: Array<Piece>;
-    private tried: Array<Piece>;
+    private buildingFloor: Array<Piece>;    
 
     private floorSolved = false;
-    private maxPieces;
+    private maxPieces: number;
 
-    constructor(scene, width, height, missingPieces) {
+    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number) {
         this.scene = scene;
         this.width = width;
         this.height = height;
