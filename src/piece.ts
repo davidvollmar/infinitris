@@ -2,11 +2,13 @@ import { MainScene } from "./scenes/mainScene";
 import { GameObjects } from 'phaser';
 import { Coordinate } from './coordinate';
 
-export class Piece {
-    static letters = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];
-    static colors = ['block-red', 'block-blue', 'block-green', 'block-yellow'];
+export type Letter = 'I' | 'L' | 'J' | 'S' | 'Z' | 'O' | 'T';
 
-    private pieceType: string;
+export class Piece {
+    static letters: Letter[] = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];    
+    static colors = ['block-red', 'block-blue', 'block-green', 'block-yellow'];    
+
+    private pieceType: Letter;
     private offsetX: number;
     private offsetY: number;
     private orientations: Coordinate[][];
@@ -19,7 +21,7 @@ export class Piece {
     private color: string;
     private draw: boolean;
 
-    constructor(scene: Phaser.Scene, pieceType: string, color: string, offsetX: number, offsetY: number, draw: boolean, orientation?: number) {
+    constructor(scene: Phaser.Scene, pieceType: Letter, color: string, offsetX: number, offsetY: number, draw: boolean, orientation?: number) {
         this.scene = scene;
         this.pieceType = pieceType;
         this.color = color;
@@ -44,7 +46,7 @@ export class Piece {
         return (Piece.colors[Math.floor(Math.random() * Piece.colors.length)]);
     }
 
-    public static pickLetter(): string {
+    public static pickLetter(): Letter {
         return (Piece.letters[Math.floor(Math.random() * Piece.letters.length)]);
     }
 
@@ -131,11 +133,11 @@ export class Piece {
         return this.letters;
     }
 
-    static getNumberOfOrientations(letter: string) {
+    static getNumberOfOrientations(letter: Letter) {
         return this.getOrientations(letter).length;
     }
 
-    getLetter(): string {
+    getLetter(): Letter {
         return this.pieceType;
     }
 

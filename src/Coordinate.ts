@@ -2,7 +2,7 @@ export class Coordinate {
     public x: integer;
     public y: integer;
 
-    constructor(x:integer, y:integer) {
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
