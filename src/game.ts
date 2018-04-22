@@ -2,7 +2,7 @@
 
 import "phaser";
 import { MainScene } from "./scenes/mainScene";
-import { MenuScene } from "./scenes/menuScene";
+import { MenuScene } from "./scenes/menuscene";
 
 // main game configuration
 const config: GameConfig = {

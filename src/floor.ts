@@ -1,5 +1,5 @@
 import { Piece } from './piece';
-import { Coordinate } from './coordinate';
+import { Coordinate } from './Coordinate';
 import { GameObjects } from 'phaser';
 
 export class Floor {
