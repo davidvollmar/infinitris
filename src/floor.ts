@@ -53,14 +53,7 @@ export class Floor {
         let puzzlePiece = this.buildingFloor[this.selectPuzzlePiece(this.buildingFloor)];
         // console.log(lastPiece)
 
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
-        puzzlePiece.moveUp()
+        puzzlePiece.takeOutOfPuzzle();
 
         this.selectedPiece = puzzlePiece;
     }
@@ -199,6 +192,7 @@ export class Floor {
         //idea: pick 'toprightmost' piece
         //so, select the piece that fills the topright coordinate in the box
         let topRightMost:Coordinate = new Coordinate(-1, this.height+this.magicGlobalOffsetY+1);
+        
         //initial implementation, just pick the last one that was put in place
         let toReturn:integer = buildingFloor.length - 1;
 
@@ -212,7 +206,6 @@ export class Floor {
             });
         }
 
-        //initial implementation, just pick the last one that was put in place
         return toReturn;
     }
 }

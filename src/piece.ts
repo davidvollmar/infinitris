@@ -77,6 +77,15 @@ export class Piece {
         }
     }
 
+    takeOutOfPuzzle(): void {
+        for(var i = 0; i<Math.floor(Math.random()*4); i++) {
+            this.rotateleft();
+        }
+        for(var i = 0; i<8; i++) {
+            this.moveUp();
+        }
+    }
+
     rotateleft(): void {
         this.orientation--;
         if (this.orientation < 0) {

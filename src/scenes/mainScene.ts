@@ -196,6 +196,7 @@ export class MainScene extends Phaser.Scene {
       //and generate a new next floor
       this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
       this.currentFloor = this.floors![0];
+      this.piece = this.currentFloor.getSelectedPiece();
       this.floors!.push(this.generateFloor(1));
     }
     let piece = this.piece!;
