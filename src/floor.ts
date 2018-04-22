@@ -25,29 +25,33 @@ export class Floor {
         this.floor = [];
         this.buildingFloor = [];
 
+        this.maxPieces = width;//assuming height == 4
+
         this.solve();
+        console.log("solved");
         //now buildingFloor can become floor.
-        this.floor = this.floor.concat(this.buildingFloor);
-        this.floor.forEach(element => {
-            // console.log("enabling draw for: " + element.toString());
+        this.buildingFloor.forEach(element => {
+            console.log("enabling draw for: " + element.toString());
             element.enableDraw();
         });
 
-        this.maxPieces = width;//assuming height == 4
     }
 
-    private debug = 0;
+    // private debug = 0;
+    private solved = false;
 
     solve() {
         if (this.isFull(this.buildingFloor) && this.isValid(this.buildingFloor)) {
             //solution found, we are done
+            this.solved = true;
+            return;
         } else {
             let nextPosition: Coordinate = this.getNextPosition();
             
-            this.debug++;            
-            if(this.debug > 10) { let p:Piece = null; p.getLetter();}//crash
+            // this.debug++;            
+            // if(this.debug > 10) { let p:Piece = null; p.getLetter();}//crash
             
-            console.log("next empty position: " + nextPosition.toString());
+            // console.log("next empty position: " + nextPosition.toString());
             let letters = Piece.getAllLetters(); //TODO randomize the order??
             for(var l = 0; l<letters.length; l++) {
                 let letter = letters[l];
@@ -64,7 +68,9 @@ export class Floor {
 
                         //if we get here, then there are no solutions in the current configuration
                         //so we must pop the previous try.
-                        this.buildingFloor.pop();
+                        if(!this.solved) {
+                            this.buildingFloor.pop();
+                        }
                     }                    
                 }                    
            }
@@ -78,10 +84,10 @@ export class Floor {
             filledCoordinates = filledCoordinates.concat(element.getTetrisCoordinates());
         });
 
-        console.log("filled Coordinates: " + filledCoordinates.length);
-        filledCoordinates.forEach(element => {
-            console.log("piece on coordinate: " + element.toString());            
-        });
+        // console.log("filled Coordinates: " + filledCoordinates.length);
+        // filledCoordinates.forEach(element => {
+        //     console.log("piece on coordinate: " + element.toString());            
+        // });
 
         let toReturn: Coordinate = new Coordinate(0, 11);//y (0-15) but floor is at (11-15)  
 
@@ -142,7 +148,7 @@ export class Floor {
 
     isFull(buildingFloor: Array<Piece>): boolean {
         //assuming that valid, done can be defined as "fitted 16 pieces in"
-        console.log("checking done: " + buildingFloor.length + " max: " + this.maxPieces);
+        // console.log("checking done: " + buildingFloor.length + " max: " + this.maxPieces);
         return buildingFloor.length == this.maxPieces;
     }
 }

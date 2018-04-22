@@ -132,7 +132,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   generateFloor(): Floor {    
-    return new Floor(this, 4, 4, null);
+    return new Floor(this, 16, 4, null);
   }
 
   generateObstacle(): void {
