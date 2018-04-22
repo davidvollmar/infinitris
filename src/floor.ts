@@ -12,16 +12,18 @@ export class Floor {
 
     private floor = Array<Piece>();
 
-    private buildingFloor: Array<Piece>;    
+    private buildingFloor: Array<Piece>;
 
     private floorSolved = false;
     private maxPieces: number;
 
     private selectedPiece: Piece;
 
-    private bottomRight: number;
+    private bottomRight: integer;
+    private offset: integer;
+    private xOffset: integer; //this is the x-offset in tetris coordinates
 
-    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, offset: number) {
+    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, offset: integer) {
         this.scene = scene;
         this.width = width;
         this.height = height;
@@ -30,20 +32,26 @@ export class Floor {
         this.floor = [];
         this.buildingFloor = [];
 
-        this.maxPieces = width;//assuming height == 4
+        this.maxPieces = width;//assuming height == 4        
 
+        //bottom right
+        this.offset = offset;
+        this.xOffset = offset * this.width;
+        this.bottomRight = 1024 + (1024 * offset);
+
+        //fill up the floor
         this.solve();
         console.log("solved");
         //now buildingFloor can become floor.
         this.buildingFloor.forEach(element => {
-            console.log("enabling draw for: " + element.toString());
+            // console.log("enabling draw for: " + element.toString());
             element.enableDraw();
         });
 
-        console.log("floor+ " + this.floor);
-        console.log("buildingfloor+ ", this.buildingFloor);
-        let lastPiece = this.buildingFloor[this.buildingFloor.length -1 ]
-        console.log(lastPiece)
+        // console.log("floor+ " + this.floor);
+        // console.log("buildingfloor+ ", this.buildingFloor);
+        let lastPiece = this.buildingFloor[this.buildingFloor.length - 1]
+        // console.log(lastPiece)
 
         lastPiece.moveUp()
         lastPiece.moveUp()
@@ -52,12 +60,9 @@ export class Floor {
         lastPiece.moveUp()
         lastPiece.moveUp()
         lastPiece.moveUp()
-        lastPiece.moveUp()        
+        lastPiece.moveUp()
 
         this.selectedPiece = lastPiece;
-        
-        //bottom right
-        this.bottomRight = 1024+(1024*offset);
     }
 
     getSelectedPiece() {
@@ -74,18 +79,18 @@ export class Floor {
             return;
         } else {
             let nextPosition: Coordinate = this.getNextPosition();
-            
+
             // this.debug++;            
             // if(this.debug > 10) { let p:Piece = null; p.getLetter();}//crash
-            
+
             // console.log("next empty position: " + nextPosition.toString());
-            let letters = Piece.getAllLetters(); 
+            let letters = Piece.getAllLetters();
             Phaser.Utils.Array.Shuffle(letters);//randomizing s.t. we get other solution than just I-piece everwhere
-            for(var l = 0; l<letters.length; l++) {
+            for (var l = 0; l < letters.length; l++) {
                 let letter = letters[l];
-                for (var i = 0; i<Piece.getNumberOfOrientations(letter); i++) {
-                    let p:Piece = new Piece(this.scene, letter, Piece.pickColor(),
-                    nextPosition.x, nextPosition.y, false, i);
+                for (var i = 0; i < Piece.getNumberOfOrientations(letter); i++) {
+                    let p: Piece = new Piece(this.scene, letter, Piece.pickColor(),
+                        nextPosition.x, nextPosition.y, false, i);
 
                     //try to place 
                     if (this.isValid(this.buildingFloor.concat([p]))) {
@@ -99,10 +104,10 @@ export class Floor {
                         if (!this.solved) {
                             this.buildingFloor.pop();
                         }
-                    }                    
-                }                    
-           }
-       }
+                    }
+                }
+            }
+        }
     }
 
     //get topleft most 'free' position to try next piece
@@ -113,16 +118,16 @@ export class Floor {
         });
 
         // console.log("filled Coordinates: " + filledCoordinates.length);
-        // filledCoordinates.forEach(element => {
-        //     console.log("piece on coordinate: " + element.toString());            
-        // });
+        filledCoordinates.forEach(element => {
+            // console.log("piece on coordinate: " + element.toString());            
+        });
 
-        let toReturn: Coordinate = new Coordinate(0, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
+        let toReturn: Coordinate = new Coordinate(0 + this.xOffset, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
 
         if (filledCoordinates.length > 0) {
             let filled: boolean = false;
             let done: boolean = false;
-            for (var x = 0; x < this.width && !done; x++) {
+            for (var x = 0 + this.xOffset; x < this.width + this.xOffset && !done; x++) {
                 // console.log("trying x: " + x);
                 for (var y = this.magicGlobalOffsetY; y < this.height + this.magicGlobalOffsetY && !done; y++) {//y (0-15) but floor is at (11-15)                
                     // console.log("trying y: " + y);
@@ -155,7 +160,6 @@ export class Floor {
         } else {
             for (var i = 0; i < buildingFloor.length - 1; i++) {
                 if (Piece.overlaps(a, buildingFloor[i])) {
-                    // console.log("OVERLAP! i: " + buildingFloor[i].toString() + " j: " + buildingFloor[j].toString());
                     return false;
                 }
             }
@@ -166,13 +170,13 @@ export class Floor {
 
     outOfBounds(a: Piece): boolean {
         let tetrisCoordinates = a.getTetrisCoordinates();
-        for(var i = 0; i<tetrisCoordinates.length; i++) {
+        for (var i = 0; i < tetrisCoordinates.length; i++) {
             let c = tetrisCoordinates[i];
-            if (c.x < 0 || c.x >= this.width || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
+            if (c.x < 0 + this.xOffset || c.x >= this.width + this.xOffset || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
                 return true;
             }
         }
-            
+
         return false;
     }
 
