@@ -69,7 +69,7 @@ export class Floor {
             p.moveOutOfPuzzle()            
         }
 
-        this.openedCoordinates.forEach(oc => console.log("opened coordinate: " + oc.toString()));
+        // this.openedCoordinates.forEach(oc => console.log("opened coordinate: " + oc.toString()));
 
         this.selectedPieceIndex = 0;
         this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
@@ -216,18 +216,17 @@ export class Floor {
 
     currentCellEmpty(magicScreenX:number):boolean {
     
-        let toCheck:Coordinate = new Coordinate(16 - Math.floor((this.bottomRight - magicScreenX)/64), 12);
-
-        //console.log("current cell x: " + (16 - Math.floor((this.bottomRight - magicScreenX)/64)));
-
+        let toCheck:Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX)/64), 12);
+        let toReturn = false;
         this.openedCoordinates.forEach(o => {
             if(Coordinate.overlaps(toCheck, o)) {
                 //was empty //TODO check if now filled
-                return true;
+                toReturn = true;
+                return;
             }
         })
         
-        return false;
+        return toReturn;
     }
 
     destroy() {       
