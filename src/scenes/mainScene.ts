@@ -71,7 +71,8 @@ export class MainScene extends Phaser.Scene {
     // this.load.image('piece', '../assets/graphics/piece.png');
     this.load.image('block-red', '../assets/graphics/blocks-light/block-red.png');
     this.load.image('block-green', '../assets/graphics/blocks-light/block-green.png');
-    this.load.image('block-blue', '../assets/graphics/blocks-light/block-blue.png');
+    this.load.image('block-blue', '../assets/graphics/blocks-light/block-blue.png');    
+    this.load.image('block-yellow', '../assets/graphics/blocks-light/block-yellow.png');
   }
 
   create(): void {

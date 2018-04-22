@@ -4,7 +4,7 @@ import { Coordinate } from './coordinate';
 
 export class Piece {
     static letters = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];
-    static colors = ['block-red', 'block-blue', 'block-green'];
+    static colors = ['block-red', 'block-blue', 'block-green', 'block-yellow'];
 
     private pieceType;
     private offsetX;

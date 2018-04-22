@@ -141,12 +141,14 @@ export class Floor {
     }
 
     outOfBounds(a: Piece): boolean {
-        a.getTetrisCoordinates().forEach(element => {
-            // console.log("comparing " + element.toString() + " to bounds");
-            if (element.x < 0 || element.x > this.width - 1 || element.y < 0 + 11 || element.y > this.height - 1 + 11) {
+        let tetrisCoordinates = a.getTetrisCoordinates();
+        for(var i = 0; i<tetrisCoordinates.length; i++) {
+            let c = tetrisCoordinates[i];
+            if (c.x < 0 || c.x >= this.width || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
                 return true;
             }
-        });
+        }
+            
         return false;
     }
 
