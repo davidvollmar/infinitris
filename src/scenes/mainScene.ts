@@ -2,6 +2,7 @@ import { World } from '../world'
 import { GameObjects } from 'phaser';
 import { PuzzleScene } from './puzzleScene';
 import { Piece } from '../piece';
+import { Floor } from '../floor';
 
 export class MainScene extends Phaser.Scene {
   //graphics
@@ -10,7 +11,7 @@ export class MainScene extends Phaser.Scene {
   private cloud: GameObjects.Sprite;
   private cloud2: GameObjects.Sprite;
   private tree: GameObjects.Sprite;
-  private bgtile: GameObjects.TileSprite;
+  // private bgtile: GameObjects.TileSprite;
   private background: GameObjects.Sprite;
   private graphics: GameObjects.Graphics;
   private instructionText: GameObjects.Text;
@@ -37,6 +38,11 @@ export class MainScene extends Phaser.Scene {
   private tetrisWidth = 8;
   private field: Array<number> = new Array(this.tetrisWidth * 8)
   private tetrisOffset = 600;
+
+  //tetris floors
+  private currentFloor: Floor;
+  private nextFloor: Floor;
+
 
   constructor() {
     super({
@@ -70,6 +76,7 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
 
+    //initial graphics
     this.background = this.add.sprite(0, 0, 'background');
     this.background.setOrigin(0, 0);
 
@@ -79,9 +86,10 @@ export class MainScene extends Phaser.Scene {
     this.tree = this.add.sprite(768, 1024-(4*64)-128, 'tree');
     this.tree.setScale(0.5);
 
-    this.instructionText = this.add.text(512, 128, "Z/X to rotate\nArrows to move blocks");
+    this.instructionText = this.add.text(512, 128, "Z/X to rotate\nArrows to move blocks\n\nFix the road before you fall!");
     this.instructionText.setScale(2);
 
+    //player animation
     this.man = this.add.sprite(this.manX, 1024-(4*64)-64, 'man');
     this.man.setScale(0.25, 0.25);
     let walk = this.anims.create({
@@ -94,10 +102,15 @@ export class MainScene extends Phaser.Scene {
 
     this.man.anims.play('manimation')
 
-    this.bgtile = this.add.tileSprite(0, 1024-(4*64), 4096, 1024, 'floor');
-    this.bgtile.setOrigin(0, 0);
-    this.bgtile.setScale(0.25);
+    //floor
+    this.currentFloor = this.generateFloor();
+    //this.nextFloor = this.generateFloor();
 
+    // this.bgtile = this.add.tileSprite(0, 1024-(4*64), 4096, 1024, 'floor');
+    // this.bgtile.setOrigin(0, 0);
+    // this.bgtile.setScale(0.25);
+
+    //camera
     let cam = this.cameras.main;
     cam.setViewport(0, 0, 1024, 1024);
 
@@ -118,25 +131,19 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
+  generateFloor(): Floor {    
+    return new Floor(this, 4, 4, null);
+  }
+
   generateObstacle(): void {
     //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
-    this.piece = new Piece(this, this.pickLetter(), this.pickColor(), 8, 4);
+    this.piece = new Piece(this, Piece.pickLetter(), Piece.pickColor(), 8, 4, false);
     
     this.validSolutions = [1, 2];
   }
 
-  pickColor():string {    
-    let colors = ['block-red','block-blue','block-green'];
-    return(colors[Math.floor(Math.random()*colors.length)]);
-  }
-
-  pickLetter():string {
-    let letters = ['I', 'L', 'L2', 'S', 'Z', 'O', 'M'];
-    return(letters[Math.floor(Math.random()*letters.length)]);
-  }
-
   update(time: number, delta: number): void {
-    this.bgtile.tilePositionX += 2;
+    // this.bgtile.tilePositionX += 2;
 
     this.cloud.x -= this.movementspeed;
     if (this.cloud.x < -256) {
@@ -200,4 +207,5 @@ export class MainScene extends Phaser.Scene {
   //     }
   //   );
   // }
+
 }
