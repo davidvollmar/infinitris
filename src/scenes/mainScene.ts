@@ -63,10 +63,15 @@ export class MainScene extends Phaser.Scene {
     this.load.image('tree', '../assets/graphics/Background/tree.png');    
     this.load.image('tree2', '../assets/graphics/Background/tree2.png');
 
-    this.load.image('block-red', '../assets/graphics/blocks-light/block-red.png');
-    this.load.image('block-green', '../assets/graphics/blocks-light/block-green.png');
-    this.load.image('block-blue', '../assets/graphics/blocks-light/block-blue.png');    
-    this.load.image('block-yellow', '../assets/graphics/blocks-light/block-yellow.png');
+    this.load.image('light-red', '../assets/graphics/blocks-light/block-red.png');
+    this.load.image('light-green', '../assets/graphics/blocks-light/block-green.png');
+    this.load.image('light-blue', '../assets/graphics/blocks-light/block-blue.png');    
+    this.load.image('light-yellow', '../assets/graphics/blocks-light/block-yellow.png');
+
+    this.load.image('dark-red', '../assets/graphics/blocks-dark/block-red.png');
+    this.load.image('dark-green', '../assets/graphics/blocks-dark/block-green.png');
+    this.load.image('dark-blue', '../assets/graphics/blocks-dark/block-blue.png');    
+    this.load.image('dark-yellow', '../assets/graphics/blocks-dark/block-yellow.png');
     
     //deuntje 
     //CC-Stealing_Orchestra_-_05_-_Tetris_Beware_Boy_Videogames_Are_Evil

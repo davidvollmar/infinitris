@@ -6,7 +6,7 @@ export type Letter = 'I' | 'L' | 'J' | 'S' | 'Z' | 'O' | 'T';
 
 export class Piece {
     static letters: Letter[] = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];    
-    static colors = ['block-red', 'block-blue', 'block-green', 'block-yellow'];    
+    static colors = ['light-red', 'light-blue', 'light-green', 'light-yellow','dark-red', 'dark-blue', 'dark-green', 'dark-yellow'];    
 
     private pieceType: Letter;
     private offsetX: number;
@@ -203,8 +203,8 @@ export class Piece {
                 orientations = [
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)],
                     [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, 3)],
-                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)],
-                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)]
+                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)],
+                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)]                    
                 ];
                 break;
             case 'L':
@@ -212,7 +212,7 @@ export class Piece {
                     [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(1, 2)],
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1)],
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, -1)]
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, -1)]
                 ];
                 break;
             case 'J':
