@@ -103,6 +103,11 @@ export class Piece {
         this.updateSprite();
     }
 
+    moveUp(): void {
+        this.offsetY--;
+        this.updateSprite();
+    }
+
     drop(): void {
         this.offsetY++;
         this.updateSprite();

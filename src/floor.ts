@@ -17,6 +17,8 @@ export class Floor {
     private floorSolved = false;
     private maxPieces: number;
 
+    private selectedPiece: Piece;
+
     constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number) {
         this.scene = scene;
         this.width = width;
@@ -35,6 +37,26 @@ export class Floor {
             console.log("enabling draw for: " + element.toString());
             element.enableDraw();
         });
+
+        console.log("floor+ " + this.floor);
+        console.log("buildingfloor+ ", this.buildingFloor);
+        let lastPiece = this.buildingFloor[this.buildingFloor.length -1 ]
+        console.log(lastPiece)
+
+        lastPiece.moveUp()
+        lastPiece.moveUp()
+        lastPiece.moveUp()
+        lastPiece.moveUp()
+        lastPiece.moveUp()
+        lastPiece.moveUp()
+        lastPiece.moveUp()
+        lastPiece.moveUp()        
+
+        this.selectedPiece = lastPiece;
+    }
+
+    getSelectedPiece() {
+        return this.selectedPiece;
     }
 
     // private debug = 0;

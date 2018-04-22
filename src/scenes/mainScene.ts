@@ -119,6 +119,8 @@ export class MainScene extends Phaser.Scene {
     this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+
+    this.piece = this.currentFloor.getSelectedPiece();
   }
 
   generateFloor(): Floor {    

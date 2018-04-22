@@ -6,7 +6,7 @@ export class MenuScene extends Phaser.Scene {
         });
     }
 
-    preload() {
+    preload(): void {
         this.load.image('background', '../assets/graphics/Background/Background.png');
         this.load.image('sun', '../assets/graphics/Background/Sun.png');
         this.load.image('cloud-big', '../assets/graphics/Background/Cloud-big.png');
@@ -14,7 +14,7 @@ export class MenuScene extends Phaser.Scene {
         this.load.image('tilesprite', '../assets/graphics/block-floor.png');
     }
 
-    create() {
+    create(): void {
         this.add.sprite(0, 0, 'background').setOrigin(0, 0);
         this.add.sprite(256 - 64, 256 - 64, 'sun').setScale(0.5);
         this.add.sprite(512 + 256, 256, 'cloud-big').setScale(0.5);
@@ -27,12 +27,8 @@ export class MenuScene extends Phaser.Scene {
         this.input.once('pointerdown', function () {
 
             // @ts-ignore 
-            this.scene.start('MainScene');
+            this.scene.start('MainScene');            
 
         }, this);
-    }
-
-    update() {
-            
     }
 }
