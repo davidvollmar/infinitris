@@ -1,7 +1,10 @@
 import { MainScene } from "./scenes/mainScene";
 import { GameObjects } from 'phaser';
+import { Coordinate } from './coordinate';
 
 export class Piece {
+    static letters = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];
+    static colors = ['block-red', 'block-blue', 'block-green'];
 
     private pieceType;
     private offsetX;
@@ -18,7 +21,7 @@ export class Piece {
     private color: string;
     private draw: boolean;
 
-    constructor(scene, pieceType: string, color: string, offsetX, offsetY: integer, draw: boolean) {
+    constructor(scene, pieceType: string, color: string, offsetX, offsetY: integer, draw: boolean, orientation?: integer) {
         this.scene = scene;
         this.pieceType = pieceType;
         this.color = color;
@@ -29,36 +32,38 @@ export class Piece {
         switch (pieceType) {
             case 'I':
                 this.orientations = [
-                    [new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
-                    [new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2), new Coordinate(1, 3)]
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, 3)],
+                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)],
+                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)]
                 ];
                 break;
             case 'L':
                 this.orientations = [
-                    [new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
-                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
-                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, 1)],
-                    [new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(2, -1)]
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, -1)]
                 ];
                 break;
             case 'J':
                 this.orientations = [
-                    [new Coordinate(3, 0), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
-                    [new Coordinate(1, -1), new Coordinate(2, 1), new Coordinate(1, 0), new Coordinate(1, 1)],
-                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0), new Coordinate(1, 1)],
-                    [new Coordinate(1, -1), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(2, -1)]
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(-1, 2)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1), new Coordinate(0, 2)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, 1)]
                 ];
                 break;
             case 'S':
                 this.orientations = [
-                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1), new Coordinate(1, 1)],
-                    [new Coordinate(2, 2), new Coordinate(2, 1), new Coordinate(1, 0), new Coordinate(1, 1)]
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, -1), new Coordinate(2, -1)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(1, 2)]
                 ];
                 break;
             case 'Z':
                 this.orientations = [
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(2, 1)],
-                    [new Coordinate(1, 2), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(1, 1)]
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, -1)]
                 ];
                 break;
             case 'O':
@@ -68,30 +73,52 @@ export class Piece {
                 break;
             case 'T':
                 this.orientations = [
-                    [new Coordinate(2, 0), new Coordinate(1, 1), new Coordinate(2, 1), new Coordinate(3, 1)],
-                    [new Coordinate(1, -1), new Coordinate(2, 0), new Coordinate(1, 0), new Coordinate(1, 1)],
-                    [new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0), new Coordinate(2, 1)],
-                    [new Coordinate(1, 0), new Coordinate(2, 1), new Coordinate(2, 0), new Coordinate(2, -1)]
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, -1), new Coordinate(1, 1)],
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(1, -1)],
+                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(0, 2)]
                 ];
                 break;
         }
 
-        this.orientation = Math.floor(Math.random() * this.orientations.length);
+        if (orientation != null) {
+            this.orientation = orientation;
+        } else {
+            this.orientation = Math.floor(Math.random() * this.orientations.length);
+        }
         //console.log("letter: " + pieceType + " color: " + color + " orientation: " + this.orientation);
 
-        if(this.draw) {
+        if (this.draw) {
             this.initSprite();
         }
     }
 
-    public static pickColor():string {    
-        let colors = ['block-red','block-blue','block-green'];
-        return(colors[Math.floor(Math.random()*colors.length)]);
-      }
-    
-    public static pickLetter():string {
-        let letters = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];
-        return(letters[Math.floor(Math.random()*letters.length)]);
+    public static pickColor(): string {
+        return (Piece.colors[Math.floor(Math.random() * Piece.colors.length)]);
+    }
+
+    public static pickLetter(): string {
+        return (Piece.letters[Math.floor(Math.random() * Piece.letters.length)]);
+    }
+
+    public static pickLetterExcept(excepted: Array<string>): string {
+        let lettersToChooseFrom = Piece.letters;
+        lettersToChooseFrom.filter(function (x) {
+            return excepted.indexOf(x) < 0
+        });
+        return lettersToChooseFrom[Math.floor(Math.random() * lettersToChooseFrom.length)];;
+    }
+
+    getNextOrientation(): integer {
+        let toReturn = this.orientation + 1;
+        if (toReturn >= this.orientations.length) {
+            toReturn = 0
+        }
+        return toReturn;
+    }
+
+    setOrientation(o: integer) {
+        this.orientation = o;
     }
 
     enableDraw() {
@@ -112,10 +139,10 @@ export class Piece {
     }
 
     updateSprite() {
-        if(this.draw) {
+        if (this.draw) {
             this.sprites.forEach(element => {
                 element.destroy();
-            });        
+            });
             this.initSprite();
         }
     }
@@ -167,11 +194,29 @@ export class Piece {
 
     getTetrisCoordinates(): Array<Coordinate> {
         let toCalc = new Array<Coordinate>();
+        // console.log("getting tetris coordinates for " + this.getLetter() + " " + this.orientation);
         this.orientations[this.orientation].forEach(element => {
             // console.log("tetris coordinates: " + element.x + " " + element.y);
+            // console.log("adding tetris coordinate: " + element.toString());
             toCalc.push(new Coordinate(element.x, element.y));
         });
         return this.offset(toCalc);
+    }
+
+    getLetter(): string {
+        return this.pieceType;
+    }
+
+    getColor(): string {
+        return this.color;
+    }
+
+    getOffsetX() {
+        return this.offsetX;
+    }
+
+    getOffsetY() {
+        return this.offsetY;
     }
 
     offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
@@ -199,12 +244,12 @@ export class Piece {
         let coordsa = a.getTetrisCoordinates();
         let coordsb = b.getTetrisCoordinates();
 
-        for(var i = 0; i<coordsa.length; i++) {
-            for(var j = 0; j<coordsb.length; j++) {
+        for (var i = 0; i < coordsa.length; i++) {
+            for (var j = 0; j < coordsb.length; j++) {
                 let ca = coordsa[i];
                 let cb = coordsb[j];
                 // console.log("comparing a: " + ca.toString() + " to b: " + cb.toString());
-                if(Coordinate.overlaps(ca,cb)) {
+                if (Coordinate.overlaps(ca, cb)) {
                     return true;
                 }
             }
@@ -213,27 +258,10 @@ export class Piece {
         return false;
     }
 
-    toString():string {        
+    toString(): string {
         return "letter: " + this.pieceType + " color: " + this.color + " orientation: " + this.orientation + " offsetX: " + this.offsetX + " offsetY: " + this.offsetY;
     }
 
 }
 
-class Coordinate {
-    public x: integer;
-    public y: integer;
-
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    static overlaps(a: Coordinate, b:Coordinate):boolean {
-        return ((a.x == b.x) && (a.y == b.y));
-    }
-
-    toString():string {
-        return "x: " + this.x + " y: " + this.y;
-    }
-}
 
