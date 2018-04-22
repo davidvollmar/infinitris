@@ -263,6 +263,13 @@ export class Piece {
         return orientations
     }
 
+    destroy() {
+        this.sprites.forEach(element => {
+            element.destroy();
+        });
+        this.draw = false;
+    }
+
 }
 
 

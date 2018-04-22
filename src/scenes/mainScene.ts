@@ -194,6 +194,7 @@ export class MainScene extends Phaser.Scene {
       //now, the floor is gone, so we can remove it 
       //and set current to the next in the queue 
       //and generate a new next floor
+      this.currentFloor!.destroy();
       this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
       this.currentFloor = this.floors![0];
       this.piece = this.currentFloor.getSelectedPiece();
