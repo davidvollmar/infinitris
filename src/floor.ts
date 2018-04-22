@@ -35,7 +35,6 @@ export class Floor {
             console.log("enabling draw for: " + element.toString());
             element.enableDraw();
         });
-
     }
 
     // private debug = 0;
