@@ -69,7 +69,7 @@ export class Floor {
             p.moveOutOfPuzzle()
         }
 
-        this.openedCoordinates.forEach(oc => console.log("opened coordinate: " + oc.toString()));
+        // this.openedCoordinates.forEach(oc => console.log("opened coordinate: " + oc.toString()));
 
         this.selectedPieceIndex = 0;
         this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
@@ -254,7 +254,7 @@ export class Floor {
 
         this.openedCoordinates.forEach(o => {
             if (Coordinate.overlaps(toCheck, o)) {
-                //was empty //TODO check if now filled
+                //was empty //TODO check if now filled                
                 return true;
             }
         })
