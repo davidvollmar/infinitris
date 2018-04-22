@@ -33,15 +33,9 @@ export class MainScene extends Phaser.Scene {
   private pieceSprite: GameObjects.Sprite;
   private validSolutions = [];
 
-  //tetris
-  private tetrisWidth = 8;
-  private field: Array<number> = new Array(this.tetrisWidth * 8)
-  private tetrisOffset = 600;
-
   //tetris floors
   private currentFloor: Floor;
   private nextFloor: Floor;
-
 
   constructor() {
     super({
@@ -119,12 +113,6 @@ export class MainScene extends Phaser.Scene {
     this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
-
-    this.graphics = this.add.graphics();
-    //typescript has no fill() on number[] ?!
-    for (var i = 0; i < this.field.length; i++) {
-      this.field[i] = 0;
-    }
   }
 
   generateFloor(): Floor {    
@@ -182,24 +170,6 @@ export class MainScene extends Phaser.Scene {
     }
     if (keyboard.JustDown(this.rightKey)) {
       this.piece.moveRight();
-    }
-
-    //this.renderTetris()
+    }   
   }
-
-  // renderTetris() {
-  //   let blockSize = 56;
-  //   this.tetrisOffset -= this.movementspeed;
-  //   let offset = [this.tetrisOffset, 400];
-
-  //   this.graphics.clear();
-  //   this.field.map(
-  //     (value, index) => {
-  //       let pos = [index % this.tetrisWidth, Math.floor(index / this.tetrisWidth)];
-  //       let xy = [offset[0] + (pos[0] * blockSize), offset[1] + (pos[1] * blockSize)];
-  //       this.graphics.strokeRect(xy[0], xy[1], blockSize, blockSize)
-  //     }
-  //   );
-  // }
-
 }

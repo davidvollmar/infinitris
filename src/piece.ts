@@ -8,8 +8,7 @@ export class Piece {
 
     private pieceType;
     private offsetX;
-    private offsetY;
-    //private coordinates;
+    private offsetY;    
     private orientations;
     private orientation;
 
