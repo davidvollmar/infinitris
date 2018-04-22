@@ -15,12 +15,11 @@ export class Piece {
     private conversionFactor = 64;
 
     private scene: Phaser.Scene;
-    private sprites: GameObjects.Sprite[] = [];
-    private sprite: GameObjects.Sprite;
+    private sprites: GameObjects.Sprite[] = [];    
     private color: string;
     private draw: boolean;
 
-    constructor(scene, pieceType: string, color: string, offsetX: number, offsetY: number, draw: boolean, orientation?: number) {
+    constructor(scene: Phaser.Scene, pieceType: string, color: string, offsetX: number, offsetY: number, draw: boolean, orientation?: number) {
         this.scene = scene;
         this.pieceType = pieceType;
         this.color = color;
@@ -60,10 +59,10 @@ export class Piece {
 
     initSprite() {
         this.getWorldCoordinates().forEach(element => {
-            this.sprite = this.scene.add.sprite(element.x, element.y, this.color);
-            this.sprite.setScale(0.25, 0.25);
-            this.sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
-            this.sprites.push(this.sprite);
+            let sprite = this.scene.add.sprite(element.x, element.y, this.color);            
+            sprite.setScale(0.25, 0.25);
+            sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
+            this.sprites.push(sprite);
         });
     }
 
@@ -107,7 +106,7 @@ export class Piece {
         this.updateSprite();
     }
 
-    drift(speed): void {
+    drift(speed: number): void {
         this.offsetX -= speed / this.conversionFactor;
         this.updateSprite();
     }
@@ -190,7 +189,7 @@ export class Piece {
         return "letter: " + this.pieceType + " color: " + this.color + " orientation: " + this.orientation + " offsetX: " + this.offsetX + " offsetY: " + this.offsetY;
     }
 
-    static getOrientations(pieceType): Array<Array<Coordinate>> {
+    static getOrientations(pieceType: String): Array<Array<Coordinate>> {
         let orientations;
         switch (pieceType) {
             case 'I':
@@ -242,6 +241,8 @@ export class Piece {
                     [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(0, 2)]
                 ];
                 break;
+            default:
+                return new Array<Array<Coordinate>>();
         }
         return orientations
     }

@@ -4,15 +4,14 @@ import { Floor } from '../floor';
 
 export class MainScene extends Phaser.Scene {
   //graphics
-  private phaserSprite: Phaser.GameObjects.Sprite;
-  private man: GameObjects.Sprite;
-  private cloud: GameObjects.Sprite;
-  private cloud2: GameObjects.Sprite;
-  private tree: GameObjects.Sprite;
+  private phaserSprite: Phaser.GameObjects.Sprite | null = null;
+  private man: GameObjects.Sprite | null = null;
+  private cloud: GameObjects.Sprite | null = null;
+  private cloud2: GameObjects.Sprite | null = null;
+  private tree: GameObjects.Sprite | null = null;
   // private bgtile: GameObjects.TileSprite;
-  private background: GameObjects.Sprite;
-  private graphics: GameObjects.Graphics;
-  private instructionText: GameObjects.Text;
+  private background: GameObjects.Sprite | null = null;  
+  private instructionText: GameObjects.Text | null = null;
 
   //magic numbers
   private manX = 64;
@@ -21,20 +20,20 @@ export class MainScene extends Phaser.Scene {
   private movementspeed = 1;
 
   //input handling  
-  private downKey: Phaser.Input.Keyboard.Key;
-  private leftKey: Phaser.Input.Keyboard.Key;
-  private rightKey: Phaser.Input.Keyboard.Key;
-  private zKey: Phaser.Input.Keyboard.Key;
-  private xKey: Phaser.Input.Keyboard.Key;
+  private downKey: Phaser.Input.Keyboard.Key | null = null;
+  private leftKey: Phaser.Input.Keyboard.Key | null = null;
+  private rightKey: Phaser.Input.Keyboard.Key | null = null;
+  private zKey: Phaser.Input.Keyboard.Key | null = null;
+  private xKey: Phaser.Input.Keyboard.Key | null = null;
 
   //things belonging to obstacle:  
-  private piece: Piece;
-  private pieceSprite: GameObjects.Sprite;
+  private piece: Piece | null = null;
+  private pieceSprite: GameObjects.Sprite | null = null;
   private validSolutions: number[] = [];
 
   //tetris floors
-  private currentFloor: Floor;
-  private nextFloor: Floor;
+  private currentFloor: Floor | null = null;
+  private nextFloor: Floor | null = null;
 
   constructor() {
     super({
@@ -114,7 +113,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   generateFloor(): Floor {    
-    return new Floor(this, 16, 4, null);
+    return new Floor(this, 16, 4, 0);
   }
 
   generateObstacle(): void {
@@ -125,16 +124,16 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    this.cloud.x -= this.movementspeed;
-    if (this.cloud.x < -256) {
-      this.cloud.x = 1024 + Math.random() * 1024;
-      this.cloud.y = 128 + Math.random() * 256;
+    this.cloud!.x -= this.movementspeed;
+    if (this.cloud!.x < -256) {
+      this.cloud!.x = 1024 + Math.random() * 1024;
+      this.cloud!.y = 128 + Math.random() * 256;
     }
 
-    this.tree.x -= this.movementspeed;
-    if (this.tree.x < -256) {
-      this.tree.x = 1024 + Math.random() * 1024;
-      this.tree.y = 1024 - (4 * 64) - 128;
+    this.tree!.x -= this.movementspeed;
+    if (this.tree!.x < -256) {
+      this.tree!.x = 1024 + Math.random() * 1024;
+      this.tree!.y = 1024 - (4 * 64) - 128;
     }
 
     if(this.instructionText) {
@@ -144,8 +143,9 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
+    let piece = this.piece!;
 
-    this.piece.drift(this.movementspeed);
+    piece.drift(this.movementspeed);
 
     // if (this.piece.x < this.manX) {//TODO if obstacle solved, generate new else, die
     //   this.piece.destroy();
@@ -154,20 +154,20 @@ export class MainScene extends Phaser.Scene {
 
     //handle input
     let keyboard = Phaser.Input.Keyboard;
-    if (keyboard.JustDown(this.downKey)) {
-      this.piece.drop();
+    if (keyboard.JustDown(this.downKey!)) {
+      piece.drop();
     }
-    if (keyboard.JustDown(this.zKey)) {
-      this.piece.rotateleft();
+    if (keyboard.JustDown(this.zKey!)) {
+      piece.rotateleft();
     }
-    if (keyboard.JustDown(this.xKey)) {
-      this.piece.rotateright();
+    if (keyboard.JustDown(this.xKey!)) {
+      piece.rotateright();
     }
-    if (keyboard.JustDown(this.leftKey)) {
-      this.piece.moveLeft();
+    if (keyboard.JustDown(this.leftKey!)) {
+      piece.moveLeft();
     }
-    if (keyboard.JustDown(this.rightKey)) {
-      this.piece.moveRight();
+    if (keyboard.JustDown(this.rightKey!)) {
+      piece.moveRight();
     }   
   }
 }
