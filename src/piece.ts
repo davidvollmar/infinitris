@@ -9,7 +9,7 @@ export class Piece {
     private pieceType: string;
     private offsetX: number;
     private offsetY: number;
-    private orientations;
+    private orientations: Coordinate[][];
     private orientation: number;
 
     private conversionFactor = 64;
@@ -116,8 +116,7 @@ export class Piece {
         let toCalc = new Array<Coordinate>();
         this.orientations[this.orientation].forEach(element => {
             toCalc.push(new Coordinate(element.x, element.y));
-        });
-        console.log("toCalc:  " + toCalc);
+        });        
         return this.convert(this.offset(toCalc));
     }
 
@@ -191,7 +190,7 @@ export class Piece {
         return "letter: " + this.pieceType + " color: " + this.color + " orientation: " + this.orientation + " offsetX: " + this.offsetX + " offsetY: " + this.offsetY;
     }
 
-    static getOrientations(pieceType): Array<Coordinate> {
+    static getOrientations(pieceType): Array<Array<Coordinate>> {
         let orientations;
         switch (pieceType) {
             case 'I':
