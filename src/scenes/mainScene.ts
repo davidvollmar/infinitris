@@ -1,6 +1,5 @@
 import { World } from '../world'
 import { GameObjects } from 'phaser';
-import { PuzzleScene } from './puzzleScene';
 import { Piece } from '../piece';
 import { Floor } from '../floor';
 
@@ -68,7 +67,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('cloud1', '../assets/graphics/Background/Cloud1.png');
     this.load.image('cloud2', '../assets/graphics/Background/Cloud2.png');
     this.load.image('tree', '../assets/graphics/Background/tree.png');
-    // this.load.image('piece', '../assets/graphics/piece.png');
+
     this.load.image('block-red', '../assets/graphics/blocks-light/block-red.png');
     this.load.image('block-green', '../assets/graphics/blocks-light/block-green.png');
     this.load.image('block-blue', '../assets/graphics/blocks-light/block-blue.png');    
@@ -107,10 +106,6 @@ export class MainScene extends Phaser.Scene {
     this.currentFloor = this.generateFloor();
     //this.nextFloor = this.generateFloor();
 
-    // this.bgtile = this.add.tileSprite(0, 1024-(4*64), 4096, 1024, 'floor');
-    // this.bgtile.setOrigin(0, 0);
-    // this.bgtile.setScale(0.25);
-
     //camera
     let cam = this.cameras.main;
     cam.setViewport(0, 0, 1024, 1024);
@@ -126,7 +121,7 @@ export class MainScene extends Phaser.Scene {
     this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
     this.graphics = this.add.graphics();
-    //typescript has no fill() number[] ?!
+    //typescript has no fill() on number[] ?!
     for (var i = 0; i < this.field.length; i++) {
       this.field[i] = 0;
     }
@@ -144,8 +139,6 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    // this.bgtile.tilePositionX += 2;
-
     this.cloud.x -= this.movementspeed;
     if (this.cloud.x < -256) {
       this.cloud.x = 1024 + Math.random() * 1024;

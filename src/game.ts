@@ -2,7 +2,6 @@
 
 import "phaser";
 import { MainScene } from "./scenes/mainScene";
-import { PuzzleScene } from "./scenes/puzzleScene";
 
 // main game configuration
 const config: GameConfig = {
