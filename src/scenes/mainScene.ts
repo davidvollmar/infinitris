@@ -179,7 +179,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.currentFloor!.drift(this.movementspeed);
-    //let piece = this.piece!;
+    let piece = this.piece!;
 
     //piece.drift(this.movementspeed);    
 
