@@ -1,6 +1,7 @@
 import { GameObjects } from 'phaser';
 import { Piece } from '../piece';
 import { Floor } from '../floor';
+import { DeadScene } from './deadScene';
 
 export class MainScene extends Phaser.Scene {
   //graphics
@@ -208,7 +209,7 @@ export class MainScene extends Phaser.Scene {
       //what the tetriscoordinate is right under the player
       //and hence, if he trips
       if(floor.currentCellEmpty(128)) {
-          console.log("Die!");
+          this.scene.start('DeadScene');
       }
     });
 
