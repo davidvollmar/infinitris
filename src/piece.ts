@@ -1,6 +1,6 @@
 import { MainScene } from "./scenes/mainScene";
 import { GameObjects } from 'phaser';
-import { Coordinate } from './coordinate';
+import { Coordinate } from './Coordinate';
 
 export type Letter = 'I' | 'L' | 'J' | 'S' | 'Z' | 'O' | 'T';
 
