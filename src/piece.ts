@@ -6,21 +6,21 @@ export class Piece {
     static letters = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];
     static colors = ['block-red', 'block-blue', 'block-green', 'block-yellow'];
 
-    private pieceType;
-    private offsetX;
-    private offsetY;    
+    private pieceType: string;
+    private offsetX: number;
+    private offsetY: number;
     private orientations;
-    private orientation;
+    private orientation: number;
 
     private conversionFactor = 64;
 
-    private scene;
-    private sprites = [];
+    private scene: Phaser.Scene;
+    private sprites: GameObjects.Sprite[] = [];
     private sprite: GameObjects.Sprite;
     private color: string;
     private draw: boolean;
 
-    constructor(scene, pieceType: string, color: string, offsetX, offsetY: integer, draw: boolean, orientation?: integer) {
+    constructor(scene, pieceType: string, color: string, offsetX: number, offsetY: number, draw: boolean, orientation?: number) {
         this.scene = scene;
         this.pieceType = pieceType;
         this.color = color;
@@ -34,7 +34,7 @@ export class Piece {
             this.orientation = orientation;
         } else {
             this.orientation = Math.floor(Math.random() * this.orientations.length);
-        }        
+        }
 
         if (this.draw) {
             this.initSprite();
@@ -49,17 +49,17 @@ export class Piece {
         return (Piece.letters[Math.floor(Math.random() * Piece.letters.length)]);
     }
 
-    setOrientation(o: integer) {
+    setOrientation(o: number) {
         this.orientation = o;
     }
 
     enableDraw() {
-        this.draw = true;        
+        this.draw = true;
         this.initSprite();
     }
 
     initSprite() {
-        this.getWorldCoordinates().forEach(element => {            
+        this.getWorldCoordinates().forEach(element => {
             this.sprite = this.scene.add.sprite(element.x, element.y, this.color);
             this.sprite.setScale(0.25, 0.25);
             this.sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
@@ -114,15 +114,16 @@ export class Piece {
 
     getWorldCoordinates(): Array<Coordinate> {
         let toCalc = new Array<Coordinate>();
-        this.orientations[this.orientation].forEach(element => {            
+        this.orientations[this.orientation].forEach(element => {
             toCalc.push(new Coordinate(element.x, element.y));
         });
+        console.log("toCalc:  " + toCalc);
         return this.convert(this.offset(toCalc));
     }
 
     getTetrisCoordinates(): Array<Coordinate> {
-        let toCalc = new Array<Coordinate>();        
-        this.orientations[this.orientation].forEach(element => {            
+        let toCalc = new Array<Coordinate>();
+        this.orientations[this.orientation].forEach(element => {
             toCalc.push(new Coordinate(element.x, element.y));
         });
         return this.offset(toCalc);
@@ -154,33 +155,29 @@ export class Piece {
 
 
     offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
-        if (inputCoordinates) {
-            return inputCoordinates.map(element => {
-                element.x += this.offsetX;
-                element.y += this.offsetY;
-                return new Coordinate(element.x, element.y);
-            });
-        }
+        return inputCoordinates.map(element => {
+            element.x += this.offsetX;
+            element.y += this.offsetY;
+            return new Coordinate(element.x, element.y);
+        });
     }
 
     convert(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
-        if (inputCoordinates) {
-            return inputCoordinates.map(element => {
-                element.x *= this.conversionFactor;
-                element.y *= this.conversionFactor;
-                return new Coordinate(element.x, element.y);
-            });
-        }
+        return inputCoordinates.map(element => {
+            element.x *= this.conversionFactor;
+            element.y *= this.conversionFactor;
+            return new Coordinate(element.x, element.y);
+        });
     }
 
-    static overlaps(a: Piece, b: Piece): boolean {        
+    static overlaps(a: Piece, b: Piece): boolean {
         let coordsa = a.getTetrisCoordinates();
         let coordsb = b.getTetrisCoordinates();
 
         for (var i = 0; i < coordsa.length; i++) {
             for (var j = 0; j < coordsb.length; j++) {
                 let ca = coordsa[i];
-                let cb = coordsb[j];                
+                let cb = coordsb[j];
                 if (Coordinate.overlaps(ca, cb)) {
                     return true;
                 }

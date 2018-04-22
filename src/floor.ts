@@ -12,7 +12,6 @@ export class Floor {
 
     private floor = Array<Piece>();
 
-    
     private buildingFloor: Array<Piece>;
     private tried: Array<Piece>;
 
@@ -64,7 +63,7 @@ export class Floor {
                     nextPosition.x, nextPosition.y, false, i);
 
                     //try to place 
-                    if(this.isValid(this.buildingFloor.concat([p]))) {
+                    if (this.isValid(this.buildingFloor.concat([p]))) {
                         //if valid, lpace
                         this.buildingFloor.push(p);
 
@@ -72,7 +71,7 @@ export class Floor {
 
                         //if we get here, then there are no solutions in the current configuration
                         //so we must pop the previous try.
-                        if(!this.solved) {
+                        if (!this.solved) {
                             this.buildingFloor.pop();
                         }
                     }                    
@@ -83,7 +82,7 @@ export class Floor {
 
     //get topleft most 'free' position to try next piece
     getNextPosition(): Coordinate {
-        let filledCoordinates = [];
+        let filledCoordinates: Coordinate[] = [];
         this.buildingFloor.forEach(element => {
             filledCoordinates = filledCoordinates.concat(element.getTetrisCoordinates());
         });

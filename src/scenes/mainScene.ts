@@ -30,7 +30,7 @@ export class MainScene extends Phaser.Scene {
   //things belonging to obstacle:  
   private piece: Piece;
   private pieceSprite: GameObjects.Sprite;
-  private validSolutions = [];
+  private validSolutions: number[] = [];
 
   //tetris floors
   private currentFloor: Floor;
