@@ -43,7 +43,7 @@ export class Floor {
         //drawOffset should be passed in px, so 1024 for 1 'screen' to the right
         this.drawOffset = drawOffset;
         //bottom right
-        this.bottomRight = 1024 + drawOffset;
+        this.bottomRight = 1024 + this.drawOffset;
 
         //fill up the floor
         this.createSolution();
@@ -255,7 +255,7 @@ export class Floor {
     currentCellEmpty(magicScreenX: number): boolean {
 
         let toCheck: Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX) / 64), 12);
-        if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x) }
+        if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x + " bottomRight: " + this.bottomRight) }
 
         let toReturn = false;
         this.openedCoordinates.forEach(o => {

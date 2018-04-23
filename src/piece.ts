@@ -65,7 +65,7 @@ export class Piece {
 
     initSprite() {
         this.getWorldCoordinates().forEach(element => {
-            let sprite = this.scene.add.sprite(element.x + this.drawOffsetX, element.y + this.drawOffsetY, this.color);
+            let sprite = this.scene.add.sprite(element.x, element.y, this.color);
             sprite.setScale(0.25, 0.25);
             sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
             this.sprites.push(sprite);
@@ -151,7 +151,7 @@ export class Piece {
     offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
         return inputCoordinates.map(element => {
             element.x += this.tetrisOffsetX;
-            element.y += this.testrisOffsetY;            
+            element.y += this.testrisOffsetY;
             return new Coordinate(element.x, element.y);
         });
     }

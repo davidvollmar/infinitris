@@ -18,10 +18,10 @@ export class MainScene extends Phaser.Scene {
   private additionalText: GameObjects.Text | null = null;
 
   //magic numbers
-  private manX = 64;
+  private manX = 100;
 
   //gameplay
-  private movementspeed = 0.5;
+  private movementspeed = 1;
 
   //input handling  
   private downKey: Phaser.Input.Keyboard.Key | null = null;
