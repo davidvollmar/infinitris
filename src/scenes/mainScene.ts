@@ -46,6 +46,9 @@ export class MainScene extends Phaser.Scene {
   private dying = false;
   private deathAnim: Phaser.GameObjects.Components.Animation | null = null;
 
+  private score = 0;
+  private scoreText: GameObjects.Text | null = null;
+
   constructor() {
     super({
       key: "MainScene"
@@ -121,6 +124,8 @@ export class MainScene extends Phaser.Scene {
     this.instructionText.setScale(2);
     this.additionalText = this.add.text(2048 + 512, 128, "Space to select other block");
     this.additionalText.setScale(2);
+    this.scoreText = this.add.text(768,64, "Score: " + this.score);
+    this.scoreText.setScale(2);
 
     //player animation
     this.man = this.add.sprite(this.manX, 1024 - (4 * 64) - 64, 'man');
@@ -158,6 +163,12 @@ export class MainScene extends Phaser.Scene {
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.piece = this.currentFloor.getSelectedPiece();
+  }
+
+  setScoreText(score: integer) {
+    this.scoreText!.destroy();
+    this.scoreText = this.add.text(768,64, "Score: " + this.score);
+    this.scoreText.setScale(2);
   }
 
   generateFloor(nrOfMissingPieces: number, offset: number): Floor {
@@ -241,6 +252,8 @@ export class MainScene extends Phaser.Scene {
       this.currentFloor = this.floors![0];
       this.piece = this.currentFloor.getSelectedPiece();
       this.floors!.push(this.generateFloor(2, 1024));
+
+      this.setScoreText(this.score++);
     }
     let piece = this.piece!;
 
