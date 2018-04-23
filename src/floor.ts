@@ -260,14 +260,28 @@ export class Floor {
         return this.bottomRight;
     }
 
-    currentCellEmpty(magicScreenX: number): boolean {
-
-        let toCheck: Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX) / 64), 12);
+    deathTrapOnThisPosition(magicScreenX: number): boolean {
+        let toReturn = false;
+        let toCheckFalling: Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX) / 64), 12);
+        let toCheckColliding: Array<Coordinate>;
+        toCheckColliding = [];
+        toCheckColliding.push(new Coordinate(toCheckFalling.x, 11));
+        toCheckColliding.push(new Coordinate(toCheckFalling.x, 10));
         // if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x + " bottomRight: " + this.bottomRight) }
 
-        let toReturn = false;
+        this.floatingPieces.forEach(fp => {
+            fp.getTetrisCoordinates().forEach(fptc => {
+                toCheckColliding.forEach(tcc => {
+                    if (Coordinate.overlaps(fptc, tcc)) {
+                        toReturn = true;
+                        return;
+                    }
+                })                
+            })
+        });
+
         this.openedCoordinates.forEach(o => {
-            if (Coordinate.overlaps(toCheck, o)) {
+            if (Coordinate.overlaps(toCheckFalling, o)) {
                 //if toCheck and o overlap, it means that we are walking on a coordinate that was opened up
                 toReturn = true;
 

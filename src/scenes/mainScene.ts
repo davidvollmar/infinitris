@@ -18,7 +18,7 @@ export class MainScene extends Phaser.Scene {
   private additionalText: GameObjects.Text | null = null;
 
   //magic numbers
-  private manX = 100;
+  private manX = 64;
 
   //gameplay
   private movementspeed = 1;
@@ -215,7 +215,7 @@ export class MainScene extends Phaser.Scene {
         //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
         //what the tetriscoordinate is right under the player
         //and hence, if he trips
-        if (floor.currentCellEmpty(128)) {
+        if (floor.deathTrapOnThisPosition(128)) {
           this.scene.start('DeadScene');
         }
     }
