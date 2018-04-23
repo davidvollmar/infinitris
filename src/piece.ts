@@ -21,12 +21,14 @@ export class Piece {
     private scene: Phaser.Scene;
     private sprites: GameObjects.Sprite[] = [];
     private color: string;
+    private originalColor: string;
     private draw: boolean;
 
     constructor(scene: Phaser.Scene, pieceType: Letter, color: string, offsetX: number, offsetY: number, draw: boolean, drawOffset: number, orientation?: number) {
         this.scene = scene;
         this.pieceType = pieceType;
         this.color = color;
+        this.originalColor = color;
         this.tetrisOffsetX = offsetX;
         this.drawOffsetX = drawOffset;
         this.testrisOffsetY = offsetY;
@@ -272,6 +274,15 @@ export class Piece {
             element.destroy();
         });
         this.draw = false;
+    }
+
+    //only used for color changing
+    setActive() {
+        this.color = 'active-white';
+    }
+
+    setInActive() {
+        this.color = this.originalColor;
     }
 
 }

@@ -69,11 +69,12 @@ export class Floor {
         }
 
         this.floatingPieces.forEach(p => {
-            p.getTetrisCoordinates().forEach(tc => console.log("floating piece tc: " + tc.toString()));
+            // p.getTetrisCoordinates().forEach(tc => console.log("floating piece tc: " + tc.toString()));
         });
 
         this.selectedPieceIndex = 0;
         this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
+        this.selectedPiece.setActive();
     }
 
     getSelectedPiece(): Piece {
@@ -81,11 +82,18 @@ export class Floor {
     }
 
     selectNextPiece(): void {
+        //first set back color of current active piece
+        this.selectedPiece.setInActive();
+
+        //now select next active piece
         this.selectedPieceIndex++;
         if (this.selectedPieceIndex >= this.floatingPieces.length) {
             this.selectedPieceIndex = 0;
         }
         this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
+
+        //now set color of new active piece
+        this.selectedPiece.setActive();
     }
 
     fitsInOpenSpace(p: Piece): boolean {
@@ -255,7 +263,7 @@ export class Floor {
     currentCellEmpty(magicScreenX: number): boolean {
 
         let toCheck: Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX) / 64), 12);
-        if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x + " bottomRight: " + this.bottomRight) }
+        // if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x + " bottomRight: " + this.bottomRight) }
 
         let toReturn = false;
         this.openedCoordinates.forEach(o => {
@@ -266,7 +274,7 @@ export class Floor {
                 //check if it's closed now:
                 this.floatingPieces.forEach(fp => {
                     fp.getTetrisCoordinates().forEach(fptc => {
-                        console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
+                        // console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
                         if (Coordinate.overlaps(fptc, o)) {
                             toReturn = false;
                             return;

@@ -71,6 +71,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('light-green', '../assets/graphics/blocks-light/block-green.png');
     this.load.image('light-blue', '../assets/graphics/blocks-light/block-blue.png');
     this.load.image('light-yellow', '../assets/graphics/blocks-light/block-yellow.png');
+    this.load.image('active-white', '../assets/graphics/blocks-light/block-white.png');
 
     this.load.image('dark-red', '../assets/graphics/blocks-dark/block-red.png');
     this.load.image('dark-green', '../assets/graphics/blocks-dark/block-green.png');
@@ -152,7 +153,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   generateFloor(nrOfMissingPieces: number, offset: number): Floor {
-    console.log("generate floor with " + nrOfMissingPieces + " missing pieces");
+    // console.log("generate floor with " + nrOfMissingPieces + " missing pieces");
     return new Floor(this, 16, 4, nrOfMissingPieces, offset);
   }
 
