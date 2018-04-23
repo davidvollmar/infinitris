@@ -21,16 +21,15 @@ export class Floor {
     private selectedPiece: Piece;
     private selectedPieceIndex: integer;
 
+    private drawOffset: integer;//should be used only for drawing
     private bottomRight: integer;
-    private offset: integer;
-    private xOffset: integer; //this is the x-offset in tetris coordinates
 
     //idea: keep track of the 'opened' coordinates when taking out pieces
     //compare those to the coordinates filled by pieces
     //if not all opened coordinates are filled, the puzzle is not solved and the player trips
     private openedCoordinates: Array<Coordinate>;
 
-    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, offset: integer) {
+    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, drawOffset: integer) {
         this.scene = scene;
         this.width = width;
         this.height = height;
@@ -41,13 +40,13 @@ export class Floor {
 
         this.maxPieces = width;//assuming height == 4        
 
+        //drawOffset should be passed in px, so 1024 for 1 'screen' to the right
+        this.drawOffset = drawOffset;
         //bottom right
-        this.offset = offset;
-        this.xOffset = offset * this.width;
-        this.bottomRight = 1024 + (1024 * offset);
+        this.bottomRight = 1024 + drawOffset;
 
         //fill up the floor
-        this.solve();
+        this.createSolution();
         // console.log("solved");
         //now buildingFloor can become floor.
         this.buildingFloor.forEach(element => {
@@ -91,27 +90,27 @@ export class Floor {
 
     fitsInOpenSpace(p: Piece): boolean {
         let tetrisses = p.getTetrisCoordinates();
-        for(let coord of tetrisses) {              
-            if(!this.contains(this.openedCoordinates, coord)) {
+        for (let coord of tetrisses) {
+            if (!this.contains(this.openedCoordinates, coord)) {
                 console.log("doesn't fit", coord);
                 return false;
             }
         }
         return true;
     }
-    
+
     contains<T>(array: Array<T>, element: T): boolean {
-        for(let t of array) {
+        for (let t of array) {
             if (t == element) {
                 return true;
             }
         }
-        return false; 
+        return false;
     }
 
     removeFromOpenSpace(p: Piece): void {
         let tetris = p.getTetrisCoordinates();
-        for(let coord of tetris) {
+        for (let coord of tetris) {
             let idx = this.openedCoordinates.indexOf(coord);
             delete this.openedCoordinates[idx];
         }
@@ -120,7 +119,7 @@ export class Floor {
     // private debug = 0;
     private solved = false;
 
-    solve() {
+    createSolution() {
         if (this.isFull(this.buildingFloor) && this.isValid(this.buildingFloor)) {
             //solution found, we are done
             this.solved = true;
@@ -138,14 +137,14 @@ export class Floor {
                 let letter = letters[l];
                 for (var i = 0; i < Piece.getNumberOfOrientations(letter); i++) {
                     let p: Piece = new Piece(this.scene, letter, Piece.pickColor(),
-                        nextPosition.x, nextPosition.y, false, i);
+                        nextPosition.x, nextPosition.y, false, this.drawOffset, i);
 
                     //try to place 
                     if (this.isValid(this.buildingFloor.concat([p]))) {
                         //if valid, lpace
                         this.buildingFloor.push(p);
 
-                        this.solve(); //now recursively solve rest of puzzle
+                        this.createSolution(); //now recursively solve rest of puzzle
 
                         //if we get here, then there are no solutions in the current configuration
                         //so we must pop the previous try.
@@ -170,12 +169,16 @@ export class Floor {
             // console.log("piece on coordinate: " + element.toString());            
         });
 
-        let toReturn: Coordinate = new Coordinate(0 + this.xOffset, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
+        //let toReturn: Coordinate = new Coordinate(0 + this.xOffset, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
+        //removing offset here and using it only for drawing
+        let toReturn: Coordinate = new Coordinate(0, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
 
         if (filledCoordinates.length > 0) {
             let filled: boolean = false;
             let done: boolean = false;
-            for (var x = 0 + this.xOffset; x < this.width + this.xOffset && !done; x++) {
+            //for (var x = 0 + this.xOffset; x < this.width + this.xOffset && !done; x++) {
+            //removing offset here and using it only for drawing
+            for (var x = 0; x < this.width && !done; x++) {
                 // console.log("trying x: " + x);
                 for (var y = this.magicGlobalOffsetY; y < this.height + this.magicGlobalOffsetY && !done; y++) {//y (0-15) but floor is at (11-15)                
                     // console.log("trying y: " + y);
@@ -224,7 +227,8 @@ export class Floor {
         let tetrisCoordinates = a.getTetrisCoordinates();
         for (var i = 0; i < tetrisCoordinates.length; i++) {
             let c = tetrisCoordinates[i];
-            if (c.x < 0 + this.xOffset || c.x >= this.width + this.xOffset || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
+            //if (c.x < 0 + this.xOffset || c.x >= this.width + this.xOffset || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
+            if (c.x < 0 || c.x >= this.width || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
                 return true;
             }
         }
@@ -250,7 +254,9 @@ export class Floor {
 
     currentCellEmpty(magicScreenX: number): boolean {
 
-        let toCheck:Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX)/64), 12);
+        let toCheck: Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX) / 64), 12);
+        if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x) }
+
         let toReturn = false;
         this.openedCoordinates.forEach(o => {
             if (Coordinate.overlaps(toCheck, o)) {
@@ -261,7 +267,7 @@ export class Floor {
                 this.floatingPieces.forEach(fp => {
                     fp.getTetrisCoordinates().forEach(fptc => {
                         console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
-                        if(Coordinate.overlaps(fptc, o)) {
+                        if (Coordinate.overlaps(fptc, o)) {
                             toReturn = false;
                             return;
                         }

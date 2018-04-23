@@ -21,7 +21,7 @@ export class MainScene extends Phaser.Scene {
   private manX = 64;
 
   //gameplay
-  private movementspeed = 1;
+  private movementspeed = 0.5;
 
   //input handling  
   private downKey: Phaser.Input.Keyboard.Key | null = null;
@@ -130,7 +130,7 @@ export class MainScene extends Phaser.Scene {
     this.currentFloor = this.generateFloor(1, 0);
     this.floors = new Array<Floor>();
     this.floors.push(this.currentFloor);
-    this.floors.push(this.generateFloor(1, 1));
+    this.floors.push(this.generateFloor(1, 1024));
 
     //camera
     let cam = this.cameras.main;
@@ -156,12 +156,12 @@ export class MainScene extends Phaser.Scene {
     return new Floor(this, 16, 4, nrOfMissingPieces, offset);
   }
 
-  generateObstacle(): void {
-    //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
-    this.piece = new Piece(this, Piece.pickLetter(), Piece.pickColor(), 8, 4, false);
+  // generateObstacle(): void {
+  //   //let obstacle: Obstacle = new Obstacle(600 + Math.random()*400, 200, 'piece');
+  //   this.piece = new Piece(this, Piece.pickLetter(), Piece.pickColor(), 8, 4, false, 0);
 
-    this.validSolutions = [1, 2];
-  }
+  //   this.validSolutions = [1, 2];
+  // }
 
   update(time: number, delta: number): void {
     this.cloud!.x -= this.movementspeed;
@@ -208,8 +208,8 @@ export class MainScene extends Phaser.Scene {
       //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
       //what the tetriscoordinate is right under the player
       //and hence, if he trips
-      if(floor.currentCellEmpty(128)) {
-          this.scene.start('DeadScene');
+      if (floor.currentCellEmpty(128)) {
+        this.scene.start('DeadScene');
       }
     });
 
@@ -221,7 +221,7 @@ export class MainScene extends Phaser.Scene {
       this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
       this.currentFloor = this.floors![0];
       this.piece = this.currentFloor.getSelectedPiece();
-      this.floors!.push(this.generateFloor(2, 1));
+      this.floors!.push(this.generateFloor(2, 1024));
     }
     let piece = this.piece!;
 
