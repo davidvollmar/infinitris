@@ -76,6 +76,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('light-green', '../assets/graphics/blocks-light/block-green.png');
     this.load.image('light-blue', '../assets/graphics/blocks-light/block-blue.png');
     this.load.image('light-yellow', '../assets/graphics/blocks-light/block-yellow.png');
+    this.load.image('active-white', '../assets/graphics/blocks-light/block-white.png');
 
     this.load.image('dark-red', '../assets/graphics/blocks-dark/block-red.png');
     this.load.image('dark-green', '../assets/graphics/blocks-dark/block-green.png');
@@ -159,7 +160,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   generateFloor(nrOfMissingPieces: number, offset: number): Floor {
-    console.log("generate floor with " + nrOfMissingPieces + " missing pieces");
+    // console.log("generate floor with " + nrOfMissingPieces + " missing pieces");
     return new Floor(this, 16, 4, nrOfMissingPieces, offset);
   }
 
@@ -210,20 +211,22 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
-    //this.currentFloor!.drift(this.movementspeed);
-    this.floors!.forEach(floor => {
-      floor.drift(this.movementspeed);
-      //idea, here we should be able to find the current 'tetriscoordinate' under the player
-      //then, we can check in the floor if this was a 'opened' space and if it is now filled
-      //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
-      //what the tetriscoordinate is right under the player
-      //and hence, if he trips
-      if (floor.currentCellEmpty(128) && !this.dying) {
-        this.dropDown(floor);
-        this.startDyingAnimation();
-        //this.scene.start('DeadScene');
-      }
-    });
+    //this reversal is a quick hack to make sure the active piece is
+    //always rendered on top of the other floors
+    for(var i = this.floors!.length-1; i>=0; i--) {
+        let floor = this.floors![i];
+        floor.drift(this.movementspeed);
+        //idea, here we should be able to find the current 'tetriscoordinate' under the player
+        //then, we can check in the floor if this was a 'opened' space and if it is now filled
+        //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
+        //what the tetriscoordinate is right under the player
+        //and hence, if he trips
+        if (floor.currentCellEmpty(128) && !this.dying) {
+          this.dropDown(floor);
+          this.startDyingAnimation();
+          //this.scene.start('DeadScene');
+        }
+    }
 
     if (this.currentFloor!.getBottomRight() < 0) {
       //now, the floor is gone, so we can remove it 
@@ -256,7 +259,7 @@ export class MainScene extends Phaser.Scene {
         // }        
       }
       if (keyboard.JustDown(this.upKey!)) {
-        piece.moveUp();
+        //piece.moveUp();
       }
       if (keyboard.JustDown(this.zKey!)) {
         piece.rotateleft();
