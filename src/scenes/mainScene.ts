@@ -41,6 +41,8 @@ export class MainScene extends Phaser.Scene {
   private floors: Array<Floor> | null = null;
   private currentFloor: Floor | null = null;
 
+  private music: Phaser.Sound.BaseSound | null = null;
+
   constructor() {
     super({
       key: "MainScene"
@@ -88,9 +90,11 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     //start music
-    var music = this.sound.add('theme');
-    music.loop = true;
-    music.play();
+    if (this.music == null) {
+      this.music = this.sound.add('theme');
+      this.music.loop = true;
+      this.music.play();
+    }
 
     //initial graphics
     this.background = this.add.sprite(0, 0, 'background');
