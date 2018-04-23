@@ -301,6 +301,7 @@ export class MainScene extends Phaser.Scene {
     this.dying = true;
     this.man!.x += 32;
     this.man!.y += 256;
+    this.man!.depth = 1000;
   }
 
   startDyingAnimation() {
