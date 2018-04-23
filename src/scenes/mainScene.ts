@@ -184,8 +184,9 @@ export class MainScene extends Phaser.Scene {
   // }
 
   update(time: number, delta: number): void {
-    if(this.dying) {
-      if(!this.deathAnim!.isPlaying) {
+    if (this.dying) {
+      if (!this.deathAnim!.isPlaying) {
+        this.dying = false;
         this.scene.start('DeadScene');
       }
       return;
@@ -296,9 +297,10 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  dropDown(floor: Floor): void {    
+  dropDown(floor: Floor): void {
     this.dying = true;
-    this.man!.y += 64;
+    this.man!.x += 32;
+    this.man!.y += 256;
   }
 
   startDyingAnimation() {
