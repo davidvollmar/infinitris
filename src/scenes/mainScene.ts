@@ -237,11 +237,11 @@ export class MainScene extends Phaser.Scene {
       let keyboard = Phaser.Input.Keyboard;
       if (keyboard.JustDown(this.downKey!)) {
         piece.drop();
-        if(this.currentFloor!.fitsInOpenSpace(piece)){
-          this.nextPiece();
-          this.currentFloor!.removeFromOpenSpace(piece);
-          return;
-        }        
+        // if(this.currentFloor!.fitsInOpenSpace(piece)){
+        //   this.nextPiece();
+        //   this.currentFloor!.removeFromOpenSpace(piece);
+        //   return;
+        // }        
       }
       if (keyboard.JustDown(this.upKey!)) {
         piece.moveUp();

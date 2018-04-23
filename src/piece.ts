@@ -10,6 +10,7 @@ export class Piece {
 
     private pieceType: Letter;
     private offsetX: number;
+    private drawOffsetX: number;
     private offsetY: number;
     private orientations: Coordinate[][];
     private orientation: number;
@@ -26,6 +27,7 @@ export class Piece {
         this.pieceType = pieceType;
         this.color = color;
         this.offsetX = offsetX;
+        this.drawOffsetX = offsetX;
         this.offsetY = offsetY;
         this.draw = draw;
 
@@ -123,7 +125,8 @@ export class Piece {
     }
 
     drift(speed: number): void {
-        this.offsetX -= speed / this.conversionFactor;
+        //this.offsetX -= speed / this.conversionFactor;
+        this.drawOffsetX -= speed / this.conversionFactor;
         this.updateSprite();
     }
 
@@ -132,7 +135,7 @@ export class Piece {
         this.orientations[this.orientation].forEach(element => {
             toCalc.push(new Coordinate(element.x, element.y));
         });        
-        return this.convert(this.offset(toCalc));
+        return this.convert(this.offset(toCalc, true));
     }
 
     getTetrisCoordinates(): Array<Coordinate> {
@@ -140,7 +143,28 @@ export class Piece {
         this.orientations[this.orientation].forEach(element => {
             toCalc.push(new Coordinate(element.x, element.y));
         });
-        return this.offset(toCalc);
+        return this.offset(toCalc, false);
+    }
+
+    offset(inputCoordinates: Array<Coordinate>, forDrawing: boolean): Array<Coordinate> {
+        return inputCoordinates.map(element => {
+            //element.x += this.offsetX;
+            if(forDrawing) {
+                element.x += this.drawOffsetX;
+             } else {
+                 element.x += this.offsetX;
+             }
+            element.y += this.offsetY;
+            return new Coordinate(element.x, element.y);
+        });
+    }
+
+    convert(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
+        return inputCoordinates.map(element => {
+            element.x *= this.conversionFactor;
+            element.y *= this.conversionFactor;
+            return new Coordinate(element.x, element.y);
+        });
     }
 
     static getAllLetters() {
@@ -165,23 +189,6 @@ export class Piece {
 
     getOffsetY() {
         return this.offsetY;
-    }
-
-
-    offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
-        return inputCoordinates.map(element => {
-            element.x += this.offsetX;
-            element.y += this.offsetY;
-            return new Coordinate(element.x, element.y);
-        });
-    }
-
-    convert(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
-        return inputCoordinates.map(element => {
-            element.x *= this.conversionFactor;
-            element.y *= this.conversionFactor;
-            return new Coordinate(element.x, element.y);
-        });
     }
 
     static overlaps(a: Piece, b: Piece): boolean {

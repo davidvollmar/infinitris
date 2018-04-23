@@ -69,7 +69,9 @@ export class Floor {
             p.moveOutOfPuzzle()
         }
 
-        // this.openedCoordinates.forEach(oc => console.log("opened coordinate: " + oc.toString()));
+        this.floatingPieces.forEach(p => {
+            p.getTetrisCoordinates().forEach(tc => console.log("floating piece tc: " + tc.toString()));
+        });
 
         this.selectedPieceIndex = 0;
         this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
@@ -252,7 +254,20 @@ export class Floor {
         let toReturn = false;
         this.openedCoordinates.forEach(o => {
             if (Coordinate.overlaps(toCheck, o)) {
-                toReturn = true;          
+                //if toCheck and o overlap, it means that we are walking on a coordinate that was opened up
+                toReturn = true;
+
+                //check if it's closed now:
+                this.floatingPieces.forEach(fp => {
+                    fp.getTetrisCoordinates().forEach(fptc => {
+                        console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
+                        if(Coordinate.overlaps(fptc, o)) {
+                            toReturn = false;
+                            return;
+                        }
+                    })
+                });
+
                 return;
             }
         })
