@@ -205,18 +205,18 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
-    //this.currentFloor!.drift(this.movementspeed);
-    this.floors!.forEach(floor => {
-      floor.drift(this.movementspeed);
-      //idea, here we should be able to find the current 'tetriscoordinate' under the player
-      //then, we can check in the floor if this was a 'opened' space and if it is now filled
-      //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
-      //what the tetriscoordinate is right under the player
-      //and hence, if he trips
-      if (floor.currentCellEmpty(128)) {
-        this.scene.start('DeadScene');
-      }
-    });
+    for(var i = this.floors!.length-1; i>=0; i--) {
+        let floor = this.floors![i];
+        floor.drift(this.movementspeed);
+        //idea, here we should be able to find the current 'tetriscoordinate' under the player
+        //then, we can check in the floor if this was a 'opened' space and if it is now filled
+        //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
+        //what the tetriscoordinate is right under the player
+        //and hence, if he trips
+        if (floor.currentCellEmpty(128)) {
+          this.scene.start('DeadScene');
+        }
+    }
 
     if (this.currentFloor!.getBottomRight() < 0) {
       //now, the floor is gone, so we can remove it 
