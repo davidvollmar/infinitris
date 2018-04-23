@@ -173,8 +173,9 @@ export class MainScene extends Phaser.Scene {
   // }
 
   update(time: number, delta: number): void {
-    if(this.dying) {
-      if(!this.deathAnim!.isPlaying) {
+    if (this.dying) {
+      if (!this.deathAnim!.isPlaying) {
+        this.dying = false;
         this.scene.start('DeadScene');
       }
       return;
@@ -217,19 +218,19 @@ export class MainScene extends Phaser.Scene {
 
     //this reversal is a quick hack to make sure the active piece is
     //always rendered on top of the other floors
-    for(var i = this.floors!.length-1; i>=0; i--) {
-        let floor = this.floors![i];
-        floor.drift(this.movementspeed);
-        //idea, here we should be able to find the current 'tetriscoordinate' under the player
-        //then, we can check in the floor if this was a 'opened' space and if it is now filled
-        //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
-        //what the tetriscoordinate is right under the player
-        //and hence, if he trips
-        if (floor.currentCellEmpty(128) && !this.dying) {
-          this.dropDown(floor);
-          this.startDyingAnimation();
-          //this.scene.start('DeadScene');
-        }
+    for (var i = this.floors!.length - 1; i >= 0; i--) {
+      let floor = this.floors![i];
+      floor.drift(this.movementspeed);
+      //idea, here we should be able to find the current 'tetriscoordinate' under the player
+      //then, we can check in the floor if this was a 'opened' space and if it is now filled
+      //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
+      //what the tetriscoordinate is right under the player
+      //and hence, if he trips
+      if (floor.currentCellEmpty(128) && !this.dying) {
+        this.dropDown(floor);
+        this.startDyingAnimation();
+        //this.scene.start('DeadScene');
+      }
     }
 
     if (this.currentFloor!.getBottomRight() < 0) {
@@ -283,9 +284,10 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  dropDown(floor: Floor): void {    
+  dropDown(floor: Floor): void {
     this.dying = true;
-    this.man!.y += 64;
+    this.man!.x += 32;
+    this.man!.y += 256;
   }
 
   startDyingAnimation() {
