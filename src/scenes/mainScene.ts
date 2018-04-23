@@ -44,6 +44,7 @@ export class MainScene extends Phaser.Scene {
   private music: Phaser.Sound.BaseSound | null = null;
 
   private dying = false;
+  private deathAnim: Phaser.GameObjects.Components.Animation | null = null;
 
   constructor() {
     super({
@@ -173,7 +174,10 @@ export class MainScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     if(this.dying) {
-        return;
+      if(!this.deathAnim!.isPlaying) {
+        this.scene.start('DeadScene');
+      }
+      return;
     }
     this.cloud!.x -= this.movementspeed;
     if (this.cloud!.x < -256) {
@@ -291,7 +295,8 @@ export class MainScene extends Phaser.Scene {
       frameRate: 3,
       repeat: 0
     });
-    this.man!.anims.play('rip')
+    this.deathAnim = this.man!.anims;
+    this.deathAnim.play('rip')
   }
 
   nextPiece(): void {
