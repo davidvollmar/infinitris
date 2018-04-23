@@ -64,28 +64,28 @@ export class MainScene extends Phaser.Scene {
       margin: 0,
       spacing: 0
     };
-    this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
-    this.load.spritesheet('dying', '../assets/graphics/tetrisman/sprites/spritesheet-dying.png', spritesheetconfig);
+    this.load.spritesheet('man', 'assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
+    this.load.spritesheet('dying', 'assets/graphics/tetrisman/sprites/spritesheet-dying.png', spritesheetconfig);
 
-    this.load.image('floor', '../assets/graphics/Background/floor.png');
+    this.load.image('floor', 'assets/graphics/Background/floor.png');
 
-    this.load.image('background', '../assets/graphics/Background/Background.png');
-    this.load.image('sun', '../assets/graphics/Background/Sun.png');
-    this.load.image('cloud-small', '../assets/graphics/Background/Cloud-small.png');
-    this.load.image('cloud-big', '../assets/graphics/Background/Cloud-big.png');
-    this.load.image('tree', '../assets/graphics/Background/tree.png');
-    this.load.image('tree2', '../assets/graphics/Background/tree2.png');
+    this.load.image('background', 'assets/graphics/Background/Background.png');
+    this.load.image('sun', 'assets/graphics/Background/Sun.png');
+    this.load.image('cloud-small', 'assets/graphics/Background/Cloud-small.png');
+    this.load.image('cloud-big', 'assets/graphics/Background/Cloud-big.png');
+    this.load.image('tree', 'assets/graphics/Background/tree.png');
+    this.load.image('tree2', 'assets/graphics/Background/tree2.png');
 
-    this.load.image('light-red', '../assets/graphics/blocks-light/block-red.png');
-    this.load.image('light-green', '../assets/graphics/blocks-light/block-green.png');
-    this.load.image('light-blue', '../assets/graphics/blocks-light/block-blue.png');
-    this.load.image('light-yellow', '../assets/graphics/blocks-light/block-yellow.png');
-    this.load.image('active-white', '../assets/graphics/blocks-light/block-white.png');
+    this.load.image('light-red', 'assets/graphics/blocks-light/block-red.png');
+    this.load.image('light-green', 'assets/graphics/blocks-light/block-green.png');
+    this.load.image('light-blue', 'assets/graphics/blocks-light/block-blue.png');
+    this.load.image('light-yellow', 'assets/graphics/blocks-light/block-yellow.png');
+    this.load.image('active-white', 'assets/graphics/blocks-light/block-white.png');
 
-    this.load.image('dark-red', '../assets/graphics/blocks-dark/block-red.png');
-    this.load.image('dark-green', '../assets/graphics/blocks-dark/block-green.png');
-    this.load.image('dark-blue', '../assets/graphics/blocks-dark/block-blue.png');
-    this.load.image('dark-yellow', '../assets/graphics/blocks-dark/block-yellow.png');
+    this.load.image('dark-red', 'assets/graphics/blocks-dark/block-red.png');
+    this.load.image('dark-green', 'assets/graphics/blocks-dark/block-green.png');
+    this.load.image('dark-blue', 'assets/graphics/blocks-dark/block-blue.png');
+    this.load.image('dark-yellow', 'assets/graphics/blocks-dark/block-yellow.png');
 
     //deuntje 
     //CC-Stealing_Orchestra_-_05_-_Tetris_Beware_Boy_Videogames_Are_Evil
