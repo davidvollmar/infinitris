@@ -308,7 +308,7 @@ export class MainScene extends Phaser.Scene {
     let dying = this.anims.create({
       key: 'rip',
       frames: this.anims.generateFrameNames('dying', { start: 0, end: 5 }),
-      frameRate: 3,
+      frameRate: 4,
       repeat: 0
     });
     this.deathAnim = this.man!.anims;
