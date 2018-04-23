@@ -43,6 +43,9 @@ export class MainScene extends Phaser.Scene {
 
   private music: Phaser.Sound.BaseSound | null = null;
 
+  private dying = false;
+  private deathAnim: Phaser.GameObjects.Components.Animation | null = null;
+
   constructor() {
     super({
       key: "MainScene"
@@ -59,6 +62,7 @@ export class MainScene extends Phaser.Scene {
       spacing: 0
     };
     this.load.spritesheet('man', '../assets/graphics/tetrisman/sprites/spritesheet.png', spritesheetconfig);
+    this.load.spritesheet('dying', '../assets/graphics/tetrisman/sprites/spritesheet-dying.png', spritesheetconfig);
 
     this.load.image('floor', '../assets/graphics/Background/floor.png');
 
@@ -169,6 +173,12 @@ export class MainScene extends Phaser.Scene {
   // }
 
   update(time: number, delta: number): void {
+    if(this.dying) {
+      if(!this.deathAnim!.isPlaying) {
+        this.scene.start('DeadScene');
+      }
+      return;
+    }
     this.cloud!.x -= this.movementspeed;
     if (this.cloud!.x < -256) {
       this.cloud!.x = 1024 + Math.random() * 1024;
@@ -215,8 +225,10 @@ export class MainScene extends Phaser.Scene {
         //here we give 128 (in px), the floor can then calculate, based on lowerright coordinate
         //what the tetriscoordinate is right under the player
         //and hence, if he trips
-        if (floor.deathTrapOnThisPosition(128)) {
-          this.scene.start('DeadScene');
+        if (floor.deathTrapOnThisPosition(128) && !this.dying) {
+          this.dropDown(floor);
+          this.startDyingAnimation();
+          //this.scene.start('DeadScene');
         }
     }
 
@@ -269,6 +281,22 @@ export class MainScene extends Phaser.Scene {
         this.nextPiece();
       }
     }
+  }
+
+  dropDown(floor: Floor): void {    
+    this.dying = true;
+    this.man!.y += 64;
+  }
+
+  startDyingAnimation() {
+    let dying = this.anims.create({
+      key: 'rip',
+      frames: this.anims.generateFrameNames('dying', { start: 0, end: 5 }),
+      frameRate: 3,
+      repeat: 0
+    });
+    this.deathAnim = this.man!.anims;
+    this.deathAnim.play('rip')
   }
 
   nextPiece(): void {
