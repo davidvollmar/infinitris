@@ -5,28 +5,34 @@ import { Coordinate } from './Coordinate';
 export type Letter = 'I' | 'L' | 'J' | 'S' | 'Z' | 'O' | 'T';
 
 export class Piece {
-    static letters: Letter[] = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];    
-    static colors = ['block-red', 'block-blue', 'block-green', 'block-yellow'];    
+    static letters: Letter[] = ['I', 'L', 'J', 'S', 'Z', 'O', 'T'];
+    static colors = ['light-red', 'light-blue', 'light-green', 'light-yellow', 'dark-red', 'dark-blue', 'dark-green', 'dark-yellow'];
 
     private pieceType: Letter;
-    private offsetX: number;
-    private offsetY: number;
+    private tetrisOffsetX: number;
+    private drawOffsetX: number;
+    private testrisOffsetY: number;
+    private drawOffsetY: number;
     private orientations: Coordinate[][];
     private orientation: number;
 
     private conversionFactor = 64;
 
     private scene: Phaser.Scene;
-    private sprites: GameObjects.Sprite[] = [];    
+    private sprites: GameObjects.Sprite[] = [];
     private color: string;
+    private originalColor: string;
     private draw: boolean;
 
-    constructor(scene: Phaser.Scene, pieceType: Letter, color: string, offsetX: number, offsetY: number, draw: boolean, orientation?: number) {
+    constructor(scene: Phaser.Scene, pieceType: Letter, color: string, offsetX: number, offsetY: number, draw: boolean, drawOffset: number, orientation?: number) {
         this.scene = scene;
         this.pieceType = pieceType;
         this.color = color;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+        this.originalColor = color;
+        this.tetrisOffsetX = offsetX;
+        this.drawOffsetX = drawOffset;
+        this.testrisOffsetY = offsetY;
+        this.drawOffsetY = 0;//no need for this?
         this.draw = draw;
 
         this.orientations = Piece.getOrientations(pieceType);
@@ -61,7 +67,7 @@ export class Piece {
 
     initSprite() {
         this.getWorldCoordinates().forEach(element => {
-            let sprite = this.scene.add.sprite(element.x, element.y, this.color);            
+            let sprite = this.scene.add.sprite(element.x, element.y, this.color);
             sprite.setScale(0.25, 0.25);
             sprite.setOrigin(0, 0);//TODO get proper origin for each piece for rotation, or make proper code
             this.sprites.push(sprite);
@@ -74,6 +80,15 @@ export class Piece {
                 element.destroy();
             });
             this.initSprite();
+        }
+    }
+
+    moveOutOfPuzzle(): void {
+        for (var i = 0; i < Math.floor(Math.random() * 4); i++) {
+            this.rotateleft();
+        }
+        for (var i = 0; i < 8; i++) {
+            this.moveUp();
         }
     }
 
@@ -94,27 +109,28 @@ export class Piece {
     }
 
     moveRight(): void {
-        this.offsetX++;
+        this.tetrisOffsetX++;
         this.updateSprite();
     }
 
     moveLeft(): void {
-        this.offsetX--;
+        this.tetrisOffsetX--;
         this.updateSprite();
     }
 
     moveUp(): void {
-        this.offsetY--;
+        this.testrisOffsetY--;
         this.updateSprite();
     }
 
     drop(): void {
-        this.offsetY++;
+        this.testrisOffsetY++;
         this.updateSprite();
     }
 
     drift(speed: number): void {
-        this.offsetX -= speed / this.conversionFactor;
+        //this.offsetX -= speed / this.conversionFactor;
+        this.drawOffsetX -= speed;
         this.updateSprite();
     }
 
@@ -122,7 +138,7 @@ export class Piece {
         let toCalc = new Array<Coordinate>();
         this.orientations[this.orientation].forEach(element => {
             toCalc.push(new Coordinate(element.x, element.y));
-        });        
+        });
         return this.convert(this.offset(toCalc));
     }
 
@@ -132,6 +148,22 @@ export class Piece {
             toCalc.push(new Coordinate(element.x, element.y));
         });
         return this.offset(toCalc);
+    }
+
+    offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
+        return inputCoordinates.map(element => {
+            element.x += this.tetrisOffsetX;
+            element.y += this.testrisOffsetY;
+            return new Coordinate(element.x, element.y);
+        });
+    }
+
+    convert(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
+        return inputCoordinates.map(element => {
+            let x = (element.x * this.conversionFactor) + this.drawOffsetX;
+            let y = (element.y * this.conversionFactor) + this.drawOffsetY;
+            return new Coordinate(x, y);
+        });
     }
 
     static getAllLetters() {
@@ -151,28 +183,11 @@ export class Piece {
     }
 
     getOffsetX() {
-        return this.offsetX;
+        return this.tetrisOffsetX;
     }
 
     getOffsetY() {
-        return this.offsetY;
-    }
-
-
-    offset(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
-        return inputCoordinates.map(element => {
-            element.x += this.offsetX;
-            element.y += this.offsetY;
-            return new Coordinate(element.x, element.y);
-        });
-    }
-
-    convert(inputCoordinates: Array<Coordinate>): Array<Coordinate> {
-        return inputCoordinates.map(element => {
-            element.x *= this.conversionFactor;
-            element.y *= this.conversionFactor;
-            return new Coordinate(element.x, element.y);
-        });
+        return this.testrisOffsetY;
     }
 
     static overlaps(a: Piece, b: Piece): boolean {
@@ -193,7 +208,7 @@ export class Piece {
     }
 
     toString(): string {
-        return "letter: " + this.pieceType + " color: " + this.color + " orientation: " + this.orientation + " offsetX: " + this.offsetX + " offsetY: " + this.offsetY;
+        return "letter: " + this.pieceType + " color: " + this.color + " orientation: " + this.orientation + " offsetX: " + this.tetrisOffsetX + " offsetY: " + this.testrisOffsetY;
     }
 
     static getOrientations(pieceType: String): Array<Array<Coordinate>> {
@@ -203,8 +218,8 @@ export class Piece {
                 orientations = [
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)],
                     [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, 3)],
-                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)],
-                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)]
+                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)],
+                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)]
                 ];
                 break;
             case 'L':
@@ -212,7 +227,7 @@ export class Piece {
                     [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(1, 2)],
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(0, 1)],
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, -1)]
+                    [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(2, -1)]
                 ];
                 break;
             case 'J':
@@ -252,6 +267,22 @@ export class Piece {
                 return new Array<Array<Coordinate>>();
         }
         return orientations
+    }
+
+    destroy() {
+        this.sprites.forEach(element => {
+            element.destroy();
+        });
+        this.draw = false;
+    }
+
+    //only used for color changing
+    setActive() {
+        this.color = 'active-white';
+    }
+
+    setInActive() {
+        this.color = this.originalColor;
     }
 
 }

@@ -11,17 +11,25 @@ export class Floor {
     private missingPieces: integer;
 
     private floor = Array<Piece>();
+    private floatingPieces = Array<Piece>();
 
-    private buildingFloor: Array<Piece>;    
+    private buildingFloor: Array<Piece>;
 
     private floorSolved = false;
     private maxPieces: number;
 
     private selectedPiece: Piece;
+    private selectedPieceIndex: integer;
 
-    private bottomRight: number;
+    private drawOffset: integer;//should be used only for drawing
+    private bottomRight: integer;
 
-    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, offset: number) {
+    //idea: keep track of the 'opened' coordinates when taking out pieces
+    //compare those to the coordinates filled by pieces
+    //if not all opened coordinates are filled, the puzzle is not solved and the player trips
+    private openedCoordinates: Array<Coordinate>;
+
+    constructor(scene: Phaser.Scene, width: number, height: number, missingPieces: number, drawOffset: integer) {
         this.scene = scene;
         this.width = width;
         this.height = height;
@@ -30,79 +38,131 @@ export class Floor {
         this.floor = [];
         this.buildingFloor = [];
 
-        this.maxPieces = width;//assuming height == 4
+        this.maxPieces = width;//assuming height == 4        
 
-        this.solve();
-        console.log("solved");
+        //drawOffset should be passed in px, so 1024 for 1 'screen' to the right
+        this.drawOffset = drawOffset;
+        //bottom right
+        this.bottomRight = 1024 + this.drawOffset;
+
+        //fill up the floor
+        this.createSolution();
+        // console.log("solved");
         //now buildingFloor can become floor.
         this.buildingFloor.forEach(element => {
-            console.log("enabling draw for: " + element.toString());
+            // console.log("enabling draw for: " + element.toString());
             element.enableDraw();
         });
 
-        console.log("floor+ " + this.floor);
-        console.log("buildingfloor+ ", this.buildingFloor);
-        let lastPiece = this.buildingFloor[this.buildingFloor.length -1 ]
-        console.log(lastPiece)
+        // console.log("floor+ " + this.floor);
+        // console.log("buildingfloor+ ", this.buildingFloor);
+        this.floatingPieces = [];
+        this.openedCoordinates = [];
 
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()
-        lastPiece.moveUp()        
+        for (var i = 0; i < missingPieces; i++) {
+            let pindex = this.selectPuzzlePiece(this.buildingFloor);
+            let p = this.buildingFloor[pindex];
+            this.openedCoordinates = this.openedCoordinates.concat(p.getTetrisCoordinates());
+            this.floatingPieces.push(p);
+            this.buildingFloor.splice(pindex, 1);
+            p.moveOutOfPuzzle()
+        }
 
-        this.selectedPiece = lastPiece;
-        
-        //bottom right
-        this.bottomRight = 1024+(1024*offset);
+        this.floatingPieces.forEach(p => {
+            // p.getTetrisCoordinates().forEach(tc => console.log("floating piece tc: " + tc.toString()));
+        });
+
+        this.selectedPieceIndex = 0;
+        this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
+        this.selectedPiece.setActive();
     }
 
-    getSelectedPiece() {
+    getSelectedPiece(): Piece {
         return this.selectedPiece;
+    }
+
+    selectNextPiece(): void {
+        //first set back color of current active piece
+        this.selectedPiece.setInActive();
+
+        //now select next active piece
+        this.selectedPieceIndex++;
+        if (this.selectedPieceIndex >= this.floatingPieces.length) {
+            this.selectedPieceIndex = 0;
+        }
+        this.selectedPiece = this.floatingPieces[this.selectedPieceIndex];
+
+        //now set color of new active piece
+        this.selectedPiece.setActive();
+    }
+
+    fitsInOpenSpace(p: Piece): boolean {
+        let tetrisses = p.getTetrisCoordinates();
+        for (let coord of tetrisses) {
+            if (!this.contains(this.openedCoordinates, coord)) {
+                console.log("doesn't fit", coord);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    contains<T>(array: Array<T>, element: T): boolean {
+        for (let t of array) {
+            if (t == element) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    removeFromOpenSpace(p: Piece): void {
+        let tetris = p.getTetrisCoordinates();
+        for (let coord of tetris) {
+            let idx = this.openedCoordinates.indexOf(coord);
+            delete this.openedCoordinates[idx];
+        }
     }
 
     // private debug = 0;
     private solved = false;
 
-    solve() {
+    createSolution() {
         if (this.isFull(this.buildingFloor) && this.isValid(this.buildingFloor)) {
             //solution found, we are done
             this.solved = true;
             return;
         } else {
             let nextPosition: Coordinate = this.getNextPosition();
-            
+
             // this.debug++;            
             // if(this.debug > 10) { let p:Piece = null; p.getLetter();}//crash
-            
+
             // console.log("next empty position: " + nextPosition.toString());
-            let letters = Piece.getAllLetters(); 
+            let letters = Piece.getAllLetters();
             Phaser.Utils.Array.Shuffle(letters);//randomizing s.t. we get other solution than just I-piece everwhere
-            for(var l = 0; l<letters.length; l++) {
+            for (var l = 0; l < letters.length; l++) {
                 let letter = letters[l];
-                for (var i = 0; i<Piece.getNumberOfOrientations(letter); i++) {
-                    let p:Piece = new Piece(this.scene, letter, Piece.pickColor(),
-                    nextPosition.x, nextPosition.y, false, i);
+                for (var i = 0; i < Piece.getNumberOfOrientations(letter); i++) {
+                    let p: Piece = new Piece(this.scene, letter, Piece.pickColor(),
+                        nextPosition.x, nextPosition.y, false, this.drawOffset, i);
 
                     //try to place 
                     if (this.isValid(this.buildingFloor.concat([p]))) {
                         //if valid, lpace
                         this.buildingFloor.push(p);
 
-                        this.solve(); //now recursively solve rest of puzzle
+                        this.createSolution(); //now recursively solve rest of puzzle
 
                         //if we get here, then there are no solutions in the current configuration
                         //so we must pop the previous try.
                         if (!this.solved) {
                             this.buildingFloor.pop();
                         }
-                    }                    
-                }                    
-           }
-       }
+                    }
+                }
+            }
+        }
     }
 
     //get topleft most 'free' position to try next piece
@@ -113,15 +173,19 @@ export class Floor {
         });
 
         // console.log("filled Coordinates: " + filledCoordinates.length);
-        // filledCoordinates.forEach(element => {
-        //     console.log("piece on coordinate: " + element.toString());            
-        // });
+        filledCoordinates.forEach(element => {
+            // console.log("piece on coordinate: " + element.toString());            
+        });
 
+        //let toReturn: Coordinate = new Coordinate(0 + this.xOffset, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
+        //removing offset here and using it only for drawing
         let toReturn: Coordinate = new Coordinate(0, this.magicGlobalOffsetY);//y (0-15) but floor is at (11-15)  
 
         if (filledCoordinates.length > 0) {
             let filled: boolean = false;
             let done: boolean = false;
+            //for (var x = 0 + this.xOffset; x < this.width + this.xOffset && !done; x++) {
+            //removing offset here and using it only for drawing
             for (var x = 0; x < this.width && !done; x++) {
                 // console.log("trying x: " + x);
                 for (var y = this.magicGlobalOffsetY; y < this.height + this.magicGlobalOffsetY && !done; y++) {//y (0-15) but floor is at (11-15)                
@@ -147,6 +211,10 @@ export class Floor {
         return toReturn;
     }
 
+    getPiecesExcluding(aPiece: Piece): Array<Piece> {
+        return this.buildingFloor.filter(p => !(p == aPiece));
+    }
+
     isValid(buildingFloor: Array<Piece>): boolean {//check only latest addition
         let a: Piece = buildingFloor[buildingFloor.length - 1];
         // console.log("isvalid? " + buildingFloor.length + " " + a.getLetter());
@@ -155,7 +223,6 @@ export class Floor {
         } else {
             for (var i = 0; i < buildingFloor.length - 1; i++) {
                 if (Piece.overlaps(a, buildingFloor[i])) {
-                    // console.log("OVERLAP! i: " + buildingFloor[i].toString() + " j: " + buildingFloor[j].toString());
                     return false;
                 }
             }
@@ -166,13 +233,14 @@ export class Floor {
 
     outOfBounds(a: Piece): boolean {
         let tetrisCoordinates = a.getTetrisCoordinates();
-        for(var i = 0; i<tetrisCoordinates.length; i++) {
+        for (var i = 0; i < tetrisCoordinates.length; i++) {
             let c = tetrisCoordinates[i];
+            //if (c.x < 0 + this.xOffset || c.x >= this.width + this.xOffset || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
             if (c.x < 0 || c.x >= this.width || c.y < this.magicGlobalOffsetY || c.y >= this.magicGlobalOffsetY + this.height) {
                 return true;
             }
         }
-            
+
         return false;
     }
 
@@ -184,10 +252,84 @@ export class Floor {
 
     drift(movementSpeed: number) {
         this.bottomRight -= movementSpeed;
-        this.buildingFloor.forEach(p => p.drift(movementSpeed))
+        this.buildingFloor.forEach(p => p.drift(movementSpeed));
+        this.floatingPieces.forEach(p => p.drift(movementSpeed));
     }
 
     getBottomRight() {
         return this.bottomRight;
+    }
+
+    deathTrapOnThisPosition(magicScreenX: number): boolean {
+        let toReturn = false;
+        let toCheckFalling: Coordinate = new Coordinate(15 - Math.floor((this.bottomRight - magicScreenX) / 64), 12);
+        let toCheckColliding: Array<Coordinate>;
+        toCheckColliding = [];
+        toCheckColliding.push(new Coordinate(toCheckFalling.x, 11));
+        toCheckColliding.push(new Coordinate(toCheckFalling.x, 10));
+        // if (toCheck.x > 0) { console.log("current cell x: " + toCheck.x + " bottomRight: " + this.bottomRight) }
+
+        this.floatingPieces.forEach(fp => {
+            fp.getTetrisCoordinates().forEach(fptc => {
+                toCheckColliding.forEach(tcc => {
+                    if (Coordinate.overlaps(fptc, tcc)) {
+                        toReturn = true;
+                        return;
+                    }
+                })                
+            })
+        });
+
+        this.openedCoordinates.forEach(o => {
+            if (Coordinate.overlaps(toCheckFalling, o)) {
+                //if toCheck and o overlap, it means that we are walking on a coordinate that was opened up
+                toReturn = true;
+
+                //check if it's closed now:
+                this.floatingPieces.forEach(fp => {
+                    fp.getTetrisCoordinates().forEach(fptc => {
+                        // console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
+                        if (Coordinate.overlaps(fptc, o)) {
+                            toReturn = false;
+                            return;
+                        }
+                    })
+                });
+
+                return;
+            }
+        })
+
+        return toReturn;
+    }
+
+    destroy() {
+        this.buildingFloor.forEach(p => {
+            p.destroy();
+        });
+        this.floatingPieces.forEach(p => {
+            p.destroy();
+        });
+    }
+
+    selectPuzzlePiece(buildingFloor: Array<Piece>): integer {
+        //idea: pick 'toprightmost' piece
+        //so, select the piece that fills the topright coordinate in the box
+        let topRightMost: Coordinate = new Coordinate(-1, this.height + this.magicGlobalOffsetY + 1);
+
+        //initial implementation, just pick the last one that was put in place
+        let toReturn: integer = buildingFloor.length - 1;
+
+        for (var i = 0; i < buildingFloor.length; i++) {
+            let p: Piece = buildingFloor[i];
+            p.getTetrisCoordinates().forEach(c => {
+                if (c.y <= topRightMost.y && c.x >= topRightMost.x) {
+                    topRightMost = new Coordinate(c.x, c.y);
+                    toReturn = i;
+                }
+            });
+        }
+
+        return toReturn;
     }
 }
