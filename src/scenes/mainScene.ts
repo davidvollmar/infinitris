@@ -205,6 +205,8 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
+    //this reversal is a quick hack to make sure the active piece is
+    //always rendered on top of the other floors
     for(var i = this.floors!.length-1; i>=0; i--) {
         let floor = this.floors![i];
         floor.drift(this.movementspeed);
@@ -249,7 +251,7 @@ export class MainScene extends Phaser.Scene {
         // }        
       }
       if (keyboard.JustDown(this.upKey!)) {
-        piece.moveUp();
+        //piece.moveUp();
       }
       if (keyboard.JustDown(this.zKey!)) {
         piece.rotateleft();
