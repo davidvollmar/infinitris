@@ -66,6 +66,7 @@ export class Piece {
     }
 
     initSprite() {
+        this.sprites = [];
         this.getWorldCoordinates().forEach(element => {
             let sprite = this.scene.add.sprite(element.x, element.y, this.color);
             sprite.setScale(0.25, 0.25);
@@ -76,10 +77,16 @@ export class Piece {
 
     updateSprite() {
         if (this.draw) {
-            this.sprites.forEach(element => {
-                element.destroy();
-            });
-            this.initSprite();
+            // this.sprites.forEach(element => {
+            //     element.destroy();
+            // });
+            // this.initSprite();
+            let wcs = this.getWorldCoordinates();
+            for(var i = 0; i<wcs.length; i++) {
+                this.sprites[i].x = wcs[i].x;
+                this.sprites[i].y = wcs[i].y;
+            }
+
         }
     }
 
@@ -269,20 +276,18 @@ export class Piece {
         return orientations
     }
 
-    destroy() {
-        this.sprites.forEach(element => {
-            element.destroy();
-        });
-        this.draw = false;
-    }
-
     //only used for color changing
     setActive() {
         this.color = 'active-white';
+        this.sprites.forEach(s => s.destroy());
+        this.initSprite();
+        this.sprites.forEach(s => s.setDepth(1));
     }
 
     setInActive() {
         this.color = this.originalColor;
+        this.sprites.forEach(s => s.destroy());
+        this.initSprite();
     }
 
 }

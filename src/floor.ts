@@ -301,17 +301,7 @@ export class Floor {
                 }
             })
         }
-
         return toReturn;
-    }
-
-    destroy() {
-        this.buildingFloor.forEach(p => {
-            p.destroy();
-        });
-        this.floatingPieces.forEach(p => {
-            p.destroy();
-        });
     }
 
     selectPuzzlePiece(buildingFloor: Array<Piece>): integer {
