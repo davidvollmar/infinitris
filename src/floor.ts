@@ -301,7 +301,6 @@ export class Floor {
                 }
             })
         }
-        
         return toReturn;
     }
 

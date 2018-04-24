@@ -7,11 +7,11 @@ export class MenuScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.load.image('background', '../assets/graphics/Background/Background.png');
-        this.load.image('sun', '../assets/graphics/Background/Sun.png');
-        this.load.image('cloud-big', '../assets/graphics/Background/Cloud-big.png');
-        this.load.image('tree', '../assets/graphics/Background/tree2.png');
-        this.load.image('tilesprite', '../assets/graphics/block-floor.png');
+        this.load.image('background', 'assets/graphics/Background/Background.png');
+        this.load.image('sun', 'assets/graphics/Background/Sun.png');
+        this.load.image('cloud-big', 'assets/graphics/Background/Cloud-big.png');
+        this.load.image('tree', 'assets/graphics/Background/tree2.png');
+        this.load.image('tilesprite', 'assets/graphics/block-floor.png');
     }
 
     create(): void {
