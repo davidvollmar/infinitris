@@ -276,40 +276,33 @@ export class Floor {
                         toReturn = true;
                         return;
                     }
-                })                
+                })
             })
         });
 
-        this.openedCoordinates.forEach(o => {
-            if (Coordinate.overlaps(toCheckFalling, o)) {
-                //if toCheck and o overlap, it means that we are walking on a coordinate that was opened up
-                toReturn = true;
+        if (!toReturn) {
+            this.openedCoordinates.forEach(o => {
+                if (Coordinate.overlaps(toCheckFalling, o)) {
+                    //if toCheck and o overlap, it means that we are walking on a coordinate that was opened up
+                    toReturn = true;
 
-                //check if it's closed now:
-                this.floatingPieces.forEach(fp => {
-                    fp.getTetrisCoordinates().forEach(fptc => {
-                        // console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
-                        if (Coordinate.overlaps(fptc, o)) {
-                            toReturn = false;
-                            return;
-                        }
-                    })
-                });
+                    //check if it's closed now:
+                    this.floatingPieces.forEach(fp => {
+                        fp.getTetrisCoordinates().forEach(fptc => {
+                            // console.log(o.toString() + " is empty, checking fp: " + fptc.toString());
+                            if (Coordinate.overlaps(fptc, o)) {
+                                toReturn = false;
+                                return;
+                            }
+                        })
+                    });
 
-                return;
-            }
-        })
-
+                    return;
+                }
+            })
+        }
+        
         return toReturn;
-    }
-
-    destroy() {
-        this.buildingFloor.forEach(p => {
-            p.destroy();
-        });
-        this.floatingPieces.forEach(p => {
-            p.destroy();
-        });
     }
 
     selectPuzzlePiece(buildingFloor: Array<Piece>): integer {

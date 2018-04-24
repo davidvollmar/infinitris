@@ -40,6 +40,7 @@ export class MainScene extends Phaser.Scene {
   //tetris floors
   private floors: Array<Floor> | null = null;
   private currentFloor: Floor | null = null;
+  private previousFloor: Floor | null = null;
 
   private music: Phaser.Sound.BaseSound | null = null;
 
@@ -103,6 +104,9 @@ export class MainScene extends Phaser.Scene {
       this.music.loop = true;
       this.music.play();
     }
+
+    this.score = 0;
+    this.movementspeed = 1;
 
     //initial graphics
     this.background = this.add.sprite(0, 0, 'background');
@@ -244,19 +248,34 @@ export class MainScene extends Phaser.Scene {
         }
     }
 
-    if (this.currentFloor!.getBottomRight() < 0) {
+    if(this.currentFloor!.getBottomRight() < 128) {
+      //now change to next floor
+      this.previousFloor = this.currentFloor;
+      this.previousFloor!.getSelectedPiece().setInActive();
+      this.currentFloor = this.floors![1];
+      this.piece = this.currentFloor.getSelectedPiece();
+      
+      //update score and speed
+      this.setScoreText(this.score++);
+      this.movementspeed += Math.pow(0.5, this.score) * this.score; //grow fast but never reach 2
+      console.log(this.movementspeed);
+    }
+
+    if (this.previousFloor && this.previousFloor!.getBottomRight() < 0) {
       //now, the floor is gone, so we can remove it 
       //and set current to the next in the queue 
       //and generate a new next floor
-      this.currentFloor!.destroy();
-      this.floors!.splice(this.floors!.indexOf(this.currentFloor!), 1);
-      this.currentFloor = this.floors![0];
-      this.piece = this.currentFloor.getSelectedPiece();
+      //this.previousFloor!.destroy();
+      this.floors!.splice(this.floors!.indexOf(this.previousFloor!), 1);
+      delete this.previousFloor;
+      // this.currentFloor = this.floors![0];
+      //this.piece = this.currentFloor.getSelectedPiece();
       this.floors!.push(this.generateFloor(2, 1024));
 
-      this.setScoreText(this.score++);
+      // //update score and speed
+      // this.setScoreText(this.score++);
+      // this.movementspeed += this.score/7.5;
     }
-    let piece = this.piece!;
 
     //piece.drift(this.movementspeed);    
 
@@ -266,10 +285,10 @@ export class MainScene extends Phaser.Scene {
     // }
 
     //handle input
-    if (piece != null) {
+    if (this.piece != null) {
       let keyboard = Phaser.Input.Keyboard;
       if (keyboard.JustDown(this.downKey!)) {
-        piece.drop();
+        this.piece.drop();
         // if(this.currentFloor!.fitsInOpenSpace(piece)){
         //   this.nextPiece();
         //   this.currentFloor!.removeFromOpenSpace(piece);
@@ -280,16 +299,16 @@ export class MainScene extends Phaser.Scene {
         //piece.moveUp();
       }
       if (keyboard.JustDown(this.zKey!)) {
-        piece.rotateleft();
+        this.piece.rotateleft();
       }
       if (keyboard.JustDown(this.xKey!)) {
-        piece.rotateright();
+        this.piece.rotateright();
       }
       if (keyboard.JustDown(this.leftKey!)) {
-        piece.moveLeft();
+        this.piece.moveLeft();
       }
       if (keyboard.JustDown(this.rightKey!)) {
-        piece.moveRight();
+        this.piece.moveRight();
       }
       if (keyboard.JustDown(this.spaceKey!)) {
         this.nextPiece();
