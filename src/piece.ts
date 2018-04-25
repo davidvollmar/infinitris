@@ -94,9 +94,19 @@ export class Piece {
         for (var i = 0; i < Math.floor(Math.random() * 4); i++) {
             this.rotateleft();
         }
-        for (var i = 0; i < 8; i++) {
+        for (var i = 0; i < Math.floor(Math.random() * 2) + 6; i++) {
             this.moveUp();
         }
+        if(Math.random() < 0.5) {
+            for (var i = 0; i < Math.floor(Math.random() * 3); i++) {
+                this.moveLeft();
+            }
+        } else {
+            for (var i = 0; i < Math.floor(Math.random() * 3); i++) {
+                this.moveRight();
+            }
+        }
+        
     }
 
     rotateleft(): void {
@@ -224,9 +234,9 @@ export class Piece {
             case 'I':
                 orientations = [
                     [new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)],
-                    [new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2), new Coordinate(0, 3)],
-                    [new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0), new Coordinate(-3, 0)],
-                    [new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2), new Coordinate(0, -3)]
+                    [new Coordinate(0, -1), new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2)],
+                    [new Coordinate(1, 0), new Coordinate(0, 0), new Coordinate(-1, 0), new Coordinate(-2, 0)],
+                    [new Coordinate(0, 1), new Coordinate(0, 0), new Coordinate(0, -1), new Coordinate(0, -2)]
                 ];
                 break;
             case 'L':
