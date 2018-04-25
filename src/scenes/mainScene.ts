@@ -225,7 +225,7 @@ export class MainScene extends Phaser.Scene {
       }
     }
     if (this.additionalText) {
-      this.additionalText.x--;
+      this.additionalText.x-=1.5;
       if (this.additionalText.x < -1024) {
         this.additionalText.destroy();
       }
