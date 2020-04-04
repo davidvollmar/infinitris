@@ -28,6 +28,7 @@ export class MainScene extends Phaser.Scene {
   private upKey: Phaser.Input.Keyboard.Key | null = null;
   private leftKey: Phaser.Input.Keyboard.Key | null = null;
   private rightKey: Phaser.Input.Keyboard.Key | null = null;
+  private mKey: Phaser.Input.Keyboard.Key | null = null;
   private zKey: Phaser.Input.Keyboard.Key | null = null;
   private xKey: Phaser.Input.Keyboard.Key | null = null;
   private spaceKey: Phaser.Input.Keyboard.Key | null = null;
@@ -162,11 +163,22 @@ export class MainScene extends Phaser.Scene {
     this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.mKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
     this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.piece = this.currentFloor.getSelectedPiece();
+  }
+
+  toggleMusic(): void {
+    if(this.music != null) {
+      if(this.music.isPlaying) {
+        this.music.pause();
+      } else {
+        this.music.resume();
+      }
+    }
   }
 
   setScoreText(score: integer) {
@@ -297,6 +309,9 @@ export class MainScene extends Phaser.Scene {
       }
       if (keyboard.JustDown(this.upKey!)) {
         //piece.moveUp();
+      }
+      if (keyboard.JustDown(this.mKey!)) {
+        this.toggleMusic();
       }
       if (keyboard.JustDown(this.zKey!)) {
         this.piece.rotateleft();
